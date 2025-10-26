@@ -1,0 +1,15 @@
+pkgname=nyxtra-network
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra Network Dependencies Meta-Package'
+arch=('any')
+license=('custom:none')
+depends=(
+  networkmanager
+)
+
+
+post_install() {
+  echo ">>> Enabling NetworkManager..."
+  systemctl enable NetworkManager.service || true
+}

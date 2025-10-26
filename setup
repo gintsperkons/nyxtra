@@ -6,5 +6,7 @@ set -e
 source ./scripts/data/enviroment.sh
 
 
-bash ./scripts/install/main.sh
+bash ./scripts/install/install.sh
+bash ./scripts/install/startup.sh
+bash ./scripts/install/config.sh
 

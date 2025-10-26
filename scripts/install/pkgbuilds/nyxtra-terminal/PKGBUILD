@@ -1,0 +1,11 @@
+pkgname=nyxtra-terminal
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra Terminal Dependencies Meta-Package'
+arch=('any')
+license=('custom:none')
+depends=(
+  alacritty
+)
+
+

@@ -8,7 +8,10 @@ PKG_DIR="$NYXTRA_HOME/scripts/install/pkgbuilds"
 # List packages in the order you want to build/install
 ORDER=(
     "nyxtra-basic"
+    "nyxtra-login"
     "nyxtra-hyprland"
+    "nyxtra-terminal"
+    "nyxtra-network"
 )
 
 # Ensure makepkg exists

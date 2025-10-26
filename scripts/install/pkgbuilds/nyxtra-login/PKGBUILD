@@ -1,0 +1,15 @@
+pkgname=nyxtra-login
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra Login Dependencies Meta-Package'
+arch=('any')
+license=('custom:none')
+depends=(
+  ly
+  uwsm
+)
+
+post_install() {
+  echo ">>> Enabling Ly greeter..."
+  systemctl enable ly.service || true
+}

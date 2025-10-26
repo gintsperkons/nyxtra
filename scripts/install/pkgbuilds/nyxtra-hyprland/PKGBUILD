@@ -1,0 +1,16 @@
+pkgname=nyxtra-hyprland
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra Hyprland Dependencies Meta-Package'
+arch=('any')
+license=('custom:none')
+depends=(
+  hyprland
+  xdg-desktop-portal-hyprland
+  xdg-desktop-portal-gtk
+  xdg-desktop-portal-wayland
+  uwsm
+)
+
+
+

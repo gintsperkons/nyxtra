@@ -5,6 +5,8 @@ pkgdesc='Nyxtra Basic Dependencies Meta-Package'
 arch=('any')
 license=('custom:none')
 depends=(
+  base
+  base-devel
   curl
   wget
 )
