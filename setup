@@ -1,0 +1,43 @@
+#! /usr/bin/env bash
+set -e
+
+#Actual setup script
+# Copy shared to ~/.local/share/nyxtra
+source ./scripts/data/enviroment.sh
+source ./scripts/data/functions.sh
+
+#Cpy share
+cpy_shared() {
+    printf "${TY_CYAN}Copying shared files...${TY_RESET}\n"
+    mkdir -p "$NYXTRA_HOME"
+    cp -r ./* "$NYXTRA_HOME/"
+}
+
+
+printf "${TY_CYAN}Color/ Modifier Test...${TY_RESET}\n"
+printf "${TY_YELLOW}Yellow Text${TY_RESET}\n"
+printf "${TY_GREEN}Green Text${TY_RESET}\n"
+printf "${TY_RED}Red Text${TY_RESET}\n"
+printf "${TY_BLUE}Blue Text${TY_RESET}\n"
+printf "${TY_PURPLE}Purple Text${TY_RESET}\n"
+printf "${TY_CYAN}Cyan Text${TY_RESET}\n"
+printf "${TY_BOLD}Bold Text${TY_RESET}\n"
+printf "${TY_FAINT}Faint Text${TY_RESET}\n"
+printf "${TY_SLANT}Slant Text${TY_RESET}\n"
+printf "${TY_UNDERLINE}Underline Text${TY_RESET}\n"
+printf "${TY_BLINK}Blink Text${TY_RESET}\n"
+printf "${TY_INVERT}Invert Text${TY_RESET}\n"
+printf "${TY_RESET}Reset Text${TY_RESET}\n"
+
+printf "${TY_CYAN}Paths.${TY_RESET}\n"
+
+printf "${TY_YELLOW}  - ${NYXTRA_HOME}${TY_RESET}\n"
+printf "${TY_YELLOW}  - ${NYXTRA_CONFIG_HOME}${TY_RESET}\n"
+printf "${TY_YELLOW}  - ${NYXTRA_CACHE_HOME}${TY_RESET}\n"
+
+
+cpy_shared
+
+echo $PATH  
+
+. test
