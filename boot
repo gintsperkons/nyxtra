@@ -29,3 +29,38 @@ else
 fi
 
 echo "🔍 Detected nyxtra mode: $NYXTRA_MODE"
+
+
+
+sudo pacman -Syu git --noconfirm --needed
+
+# ------------------------------------------------
+# Act based on environment
+# ------------------------------------------------
+
+case "$NYXTRA_MODE" in
+    dev)
+        echo "🔗 Developer symlink active: $NYXTRA_HOME → $(readlink "$NYXTRA_HOME")"
+        bash "$NYXTRA_HOME/setup"
+        ;;
+
+    installed)
+        echo "📦 Pulling updates..."
+        git -C "$NYXTRA_HOME" pull --ff-only || echo "⚠️ Git pull failed, continuing..."
+        bash "$NYXTRA_HOME/setup"
+        ;;
+
+    detached)
+        echo "🧰 Detached development repo detected."
+        echo "→ Linking $SCRIPT_DIR to $NYXTRA_HOME"
+        ln -sf "$SCRIPT_DIR" "$NYXTRA_HOME"
+        echo "✅ Symlink created."
+        bash "$NYXTRA_HOME/setup"
+        ;;
+
+    clean)
+        echo "🌱 Cloning Nyxtra fresh into $NYXTRA_HOME..."
+        git clone "$REPO_URL" "$NYXTRA_HOME"
+        bash "$NYXTRA_HOME/setup"
+        ;;
+esac
