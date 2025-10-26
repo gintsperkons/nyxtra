@@ -1,7 +1,7 @@
 # Environment variables for nyxtra
-NYXTRA_HOME="$HOME/.local/share/nyxtra"
-NYXTRA_CONFIG_HOME="$HOME/.config/nyxtra"
-NYXTRA_CACHE_HOME="$HOME/.cache/nyxtra"
+export NYXTRA_HOME="$HOME/.local/share/nyxtra"
+export NYXTRA_CONFIG_HOME="$HOME/.config/nyxtra"
+export NYXTRA_CACHE_HOME="$HOME/.cache/nyxtra"
 
 export PATH="$NYXTRA_HOME/bin:$PATH"
 

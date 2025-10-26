@@ -5,18 +5,8 @@ pkgdesc='Nyxtra Basic Dependencies Meta-Package'
 arch=('any')
 license=('custom:none')
 depends=(
-  axel
-  bc
-  coreutils
-  cliphist
-  cmake
   curl
-  rsync
   wget
-  ripgrep
-  jq
-  meson
-  xdg-user-dirs
 )
 
 
