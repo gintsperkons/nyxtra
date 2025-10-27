@@ -8,7 +8,7 @@ source $HOME/.local/share/nyxtra/scripts/data/enviroment.sh
 
 
 sudo cp -f $NYXTRA_HOME/defaults/pacman.conf /etc/pacman.conf
-
+sudo pacman -Sy --noconfirm
 
 bash $NYXTRA_HOME/scripts/install/install.sh
 bash $NYXTRA_HOME/scripts/install/startup.sh
