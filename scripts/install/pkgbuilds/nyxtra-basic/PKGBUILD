@@ -9,6 +9,7 @@ depends=(
   base-devel
   curl
   wget
+  openssh
 )
 
 
