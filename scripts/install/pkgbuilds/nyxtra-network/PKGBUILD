@@ -7,6 +7,5 @@ license=('custom:none')
 depends=(
   networkmanager
 )
-install=(
-  nyxtra-network.install
-)
+install=nyxtra-network.install
+
