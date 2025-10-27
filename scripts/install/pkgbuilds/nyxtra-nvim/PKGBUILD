@@ -8,6 +8,7 @@ depends=(
   neovim
   git
   curl
+  lua
   lazygit
   luarocks
   ruff

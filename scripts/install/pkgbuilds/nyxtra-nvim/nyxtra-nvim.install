@@ -1,14 +1,18 @@
-declare npm_nvim(
+#!/bin/bash
+
+# Array of npm packages to install globally for Neovim
+npm_nvim=(
     typescript
     typescript-language-server
     prettier
     eslint
     eslint_d
     htmlhint
-    vscode_langservers_extracted
+    vscode-langservers-extracted
 )
 
 post_install() {
-  echo ">>> Installing Neovim npm packages..."
-  npm install -g "${npm_nvim[@]}"
+    echo ">>> Installing Neovim npm packages..."
+    # Use /usr/bin/env to ensure npm is found in PATH
+    /usr/bin/env npm install -g "${npm_nvim[@]}"
 }
