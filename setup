@@ -6,7 +6,13 @@ set -e
 source $HOME/.local/share/nyxtra/scripts/data/enviroment.sh
 
 
+
+sudo cp -f $NYXTRA_HOME/defaults/pacman.conf /etc/pacman.conf
+
+
 bash $NYXTRA_HOME/scripts/install/install.sh
 bash $NYXTRA_HOME/scripts/install/startup.sh
 bash $NYXTRA_HOME/scripts/install/config.sh
 
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+cp $NYXTRA_HOME/defaults/.zshrc $HOME/.zshrc

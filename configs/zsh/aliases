@@ -1,0 +1,1 @@
+alias tmuxdev='tmux new-session -d -s dev -n nvim "nvim"; tmux new-window -t dev:2 -n shell "zsh"; tmux new-window -t dev:3 -n test-shell "zsh"; tmux select-window -t dev:2; tmux attach -t dev'

@@ -1,0 +1,18 @@
+pkgname=nyxtra-nvim
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra Neovim Dependencies Meta-Package'
+arch=('any')
+license=('custom:none')
+depends=(
+  neovim
+  git
+  curl
+  lazygit
+  luarocks
+  ruff
+  nodejs
+  npm
+)
+install="${pkgname}.install"
+

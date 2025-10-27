@@ -1,0 +1,14 @@
+declare npm_nvim(
+    typescript
+    typescript-language-server
+    prettier
+    eslint
+    eslint_d
+    htmlhint
+    vscode_langservers_extracted
+)
+
+post_install() {
+  echo ">>> Installing Neovim npm packages..."
+  npm install -g "${npm_nvim[@]}"
+}

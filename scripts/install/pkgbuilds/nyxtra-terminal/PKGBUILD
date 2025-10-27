@@ -6,6 +6,7 @@ arch=('any')
 license=('custom:none')
 depends=(
   alacritty
+  zsh
 )
 
 

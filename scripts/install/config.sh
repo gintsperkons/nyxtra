@@ -8,6 +8,8 @@ NYXTRA_CONFIG="$NYXTRA_HOME/configs"
 declare -a CONFIG_FOLDERS=(
     "hypr"
     "ly"
+    "nvim"
+    "zsh"
 )
 
 
