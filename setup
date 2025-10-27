@@ -14,5 +14,8 @@ bash $NYXTRA_HOME/scripts/install/install.sh
 bash $NYXTRA_HOME/scripts/install/startup.sh
 bash $NYXTRA_HOME/scripts/install/config.sh
 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    echo "🔧 Installing Oh My Zsh..."
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
 cp $NYXTRA_HOME/defaults/.zshrc $HOME/.zshrc
