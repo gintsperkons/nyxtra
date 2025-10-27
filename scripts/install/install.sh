@@ -12,6 +12,7 @@ ORDER=(
     "nyxtra-hyprland"
     "nyxtra-terminal"
     "nyxtra-network"
+    "nyxtra-nvim"
 )
 
 # Ensure makepkg exists
