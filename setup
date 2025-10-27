@@ -5,6 +5,11 @@ set -e
 # Copy shared to ~/.local/share/nyxtra
 source $HOME/.local/share/nyxtra/scripts/data/enviroment.sh
 
+printf 'ārgs: %s\n' "$1"
+if [[ $1 == config ]]; then
+  bash $NYXTRA_HOME/scripts/install/config.sh
+  exit 0
+fi
 
 
 sudo cp -f $NYXTRA_HOME/defaults/pacman.conf /etc/pacman.conf
