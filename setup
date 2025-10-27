@@ -3,10 +3,10 @@ set -e
 
 #Actual setup script
 # Copy shared to ~/.local/share/nyxtra
-source ./scripts/data/enviroment.sh
+source $HOME/.local/share/nyxtra/scripts/data/enviroment.sh
 
 
-bash ./scripts/install/install.sh
-bash ./scripts/install/startup.sh
-bash ./scripts/install/config.sh
+bash $NYXTRA_HOME/scripts/install/install.sh
+bash $NYXTRA_HOME/scripts/install/startup.sh
+bash $NYXTRA_HOME/scripts/install/config.sh
 
