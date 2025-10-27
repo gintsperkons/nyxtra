@@ -24,7 +24,7 @@ for pkg in "${ORDER[@]}"; do
     dir="$PKG_DIR/$pkg"
     if [[ -f "$dir/PKGBUILD" ]]; then
         echo "🔧 Building and installing package: $pkg"
-        (cd "$dir" && makepkg -si --noconfirm)
+        (cd "$dir" && makepkg -sfi --noconfirm)
     else
         echo "⚠️ PKGBUILD not found in $dir, skipping"
     fi
