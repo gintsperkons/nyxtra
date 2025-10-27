@@ -7,9 +7,6 @@ license=('custom:none')
 depends=(
   networkmanager
 )
-
-
-post_install() {
-  echo ">>> Enabling NetworkManager..."
-  systemctl enable NetworkManager.service || true
-}
+install=(
+  nyxtra-network.install
+)
