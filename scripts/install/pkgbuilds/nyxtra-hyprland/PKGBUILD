@@ -6,9 +6,9 @@ arch=('any')
 license=('custom:none')
 depends=(
   hyprland
+  xdg-desktop-portal
   xdg-desktop-portal-hyprland
   xdg-desktop-portal-gtk
-  xdg-desktop-portal-wayland
   uwsm
 )
 
