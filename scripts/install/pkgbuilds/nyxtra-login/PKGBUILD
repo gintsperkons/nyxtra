@@ -8,5 +8,5 @@ depends=(
   ly
   uwsm
 )
-install=nyxtra-login.install
+install="${pkgname}.install"
 

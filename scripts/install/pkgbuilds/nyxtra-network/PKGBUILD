@@ -7,5 +7,5 @@ license=('custom:none')
 depends=(
   networkmanager
 )
-install=nyxtra-network.install
 
+install="${pkgname}.install"
