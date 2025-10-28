@@ -43,6 +43,7 @@ fi
 
 AUR_PKG=(
   "brave-bin"
+  "visual-studio-code-bin"
 )
 # Step 3: Install all built packages in one transaction
 if [[ ${#AUR_PKG[@]} -gt 0 ]]; then
