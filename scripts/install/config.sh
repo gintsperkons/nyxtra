@@ -10,6 +10,7 @@ declare -a CONFIG_FOLDERS=(
     "ly"
     "nvim"
     "zsh"
+    "BraveSoftware"
 )
 
 
@@ -20,5 +21,5 @@ for folder in "${CONFIG_FOLDERS[@]}"; do
 
     echo "📁 Copying $SRC to $DEST"
     mkdir -p "$DEST"
-    cp -r "$SRC"* "$DEST"
+    cp -r  "$SRC"* "$DEST"
 done
