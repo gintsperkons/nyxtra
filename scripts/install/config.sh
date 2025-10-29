@@ -11,6 +11,7 @@ declare -a CONFIG_FOLDERS=(
     "nvim"
     "zsh"
     "BraveSoftware"
+    "quickshell"
 )
 
 

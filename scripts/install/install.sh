@@ -44,6 +44,7 @@ fi
 AUR_PKG=(
   "brave-bin"
   "visual-studio-code-bin"
+  "quickshell-git"
 )
 # Step 3: Install all built packages in one transaction
 if [[ ${#AUR_PKG[@]} -gt 0 ]]; then

@@ -8,6 +8,7 @@ depends=(
   alacritty
   zsh
   ttf-jetbrains-mono-nerd
+  
 )
 
 
