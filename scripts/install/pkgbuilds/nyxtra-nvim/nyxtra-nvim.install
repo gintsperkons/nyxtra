@@ -9,6 +9,9 @@ npm_nvim=(
     eslint_d
     htmlhint
     vscode-langservers-extracted
+    @vue/language-server
+    @vue/typescript
+    intelephense
 )
 
 post_install() {

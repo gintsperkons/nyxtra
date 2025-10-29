@@ -16,4 +16,12 @@ M.neo_tree = {
   { "<C-e>", "<cmd>Neotree filesystem toggle right<cr>", desc = "Toggle Neo-tree (normal)", mode = "n" },
 }
 
+M.bufferline = {
+  { "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer", mode = "n" },
+  { "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Previous buffer", mode = "n" },
+  { "<leader>bc", "<cmd>BufferLineCloseOthers<cr>", desc = "Close other buffers", mode = "n" },
+  { "<leader>bd", "<cmd>:bdelete<cr>", desc = "Delete current buffer", mode = "n" },
+}
+
+
 return M

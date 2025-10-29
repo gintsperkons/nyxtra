@@ -10,8 +10,13 @@ return {
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
-          "lua_ls",
-          "clangd",
+          "lua_ls",        -- Lua
+          "clangd",        -- C / C++
+          "ts_ls",      -- JS / TS
+          "vue_ls",         -- Vue SFC support
+          "html",         -- HTML
+          "cssls",       -- CSS / SCSS
+          "intelephense",  -- PHP
         },
       })
     end,
@@ -20,13 +25,15 @@ return {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {
       ensure_installed = {
-        "clang-format",
-        "ruff",
-        "stylua",
-        "black",
-        "cpplint",
-        "codelldb",
-        "prettier"
+        "clang-format",        -- C / C++
+        "ruff",                -- Python
+        "stylua",              -- Lua
+        "black",               -- Python
+        "cpplint",             -- C / C++
+        "codelldb",            -- C / C++
+        "prettier",            -- JS / TS / CSS / HTML  
+        "vue-language-server", -- Vue SFC support
+        "intelephense",        -- PHP
       },
       auto_update = true,
       run_on_start = true,
@@ -34,19 +41,42 @@ return {
     dependencies = { "williamboman/mason.nvim" },
   },
   {
-    "neovim/nvim-lspconfig",
-    config = function()
-      local lspconfig = require("lspconfig")
+      "neovim/nvim-lspconfig",
+      config = function()
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+        -- Auto-start all LSPs that Mason installs
+        local servers = {
+          lua_ls = {},
+          clangd = {
+            cmd = { "clangd", "--compile-commands-dir=." },
+          },
+          vue_ls = {
+            filetypes = { "vue", "typescript", "javascript", "javascriptreact", "typescriptreact" },
+          },
+          tsserver = {
+            on_attach = function(client)
+              client.server_capabilities.documentFormattingProvider = false -- use prettier instead
+            end,
+          },
+          html = {},
+          cssls = {},
+          intelephense = {},
+        }
 
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-      })
-      lspconfig.clangd.setup({
-        capabilities = capabilities,
-        cmd = { "clangd", "--compile-commands-dir=." },
-      })
+        for name, override in pairs(servers) do
+          local base = vim.lsp.config[name]
+          if base then
+            vim.lsp.start(vim.tbl_deep_extend("force", base, {
+              capabilities = capabilities,
+              settings = override.settings,
+              cmd = override.cmd or base.cmd,
+              filetypes = override.filetypes or base.filetypes,
+              root_dir = override.root_dir or base.root_dir,
+              on_attach = override.on_attach or nil,
+            }))
+          end
+        end
 
       -- vim.diagnostic.config({
       --   virtual_text = {
