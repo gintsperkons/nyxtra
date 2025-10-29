@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Define parent -> children mapping
+declare -A MENU
+MENU["Power"]="Reboot Shutdown"
+
+# Parent menu order
+PARENT_ORDER=("Power" "Settings" "Install")
+
+# Flatten all children into a separate array
+CHILD_ITEMS=()
+for PARENT in "${PARENT_ORDER[@]}"; do
+    for CHILD in ${MENU[$PARENT]}; do
+        CHILD_ITEMS+=("$PARENT / $CHILD")
+    done
+done
+
+# Build the full menu: parents + children
+FULL_MENU=("${PARENT_ORDER[@]}" "${CHILD_ITEMS[@]}")
+
+# First prompt: search or pick directly
+SEARCH=$(printf '%s\n' "${FULL_MENU[@]}" | rofi -dmenu -i -p "Search or pick:")
+
+SELECTED="$SEARCH"
+
+# If user picked a parent, show its children
+if [[ " ${PARENT_ORDER[*]} " =~ " ${SEARCH} " ]]; then
+    CHILDREN=${MENU[$SEARCH]}
+    CHOICE=$(printf '%s\n' $CHILDREN | rofi -dmenu -i -p "$SEARCH →")
+    SELECTED="$SEARCH / $CHOICE"
+fi
+
+# Actions based on final selection
+case "$SELECTED" in
+    "Power / Shutdown")
+        systemctl poweroff
+        ;;
+    "Power / Reboot")
+        systemctl reboot
+        ;;
+    *)
+        echo "Selected: $SELECTED"
+        ;;
+esac
