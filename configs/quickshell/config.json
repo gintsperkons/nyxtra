@@ -1,3 +1,9 @@
 {
-  "text":"Hello World!"  
+  "text":"Hello World!",
+  "launcher":{
+    "enabled":false
+  },
+  "bar":{
+    "enabled":true
+  }
 }

@@ -1,40 +1,49 @@
-
-
 pragma Singleton
-import QtQuick 
+import QtQuick
 import Quickshell.Io
 
 QtObject {
     id: config
 
+    // Top-level config values
     property string text: ""
-    property int count: 0
-    property bool enabled: false
+    property QtObject launcher: QtObject {
+        property bool enabled: false
+    }
+    property QtObject bar: QtObject {
+        property bool enabled: false
+    }
 
+    // FileView watches and syncs config.json
     property var file: FileView {
         path: Qt.resolvedUrl("../config.json")
         watchChanges: true
+
         adapter: JsonAdapter {
             id: adapter
             property string text
-            property int count
-            property bool enabled
+            property JsonObject launcher: JsonObject {
+                property bool enabled: false
+            }
+            property JsonObject bar: JsonObject {
+                property bool enabled: false
+            }
         }
 
         onLoaded: updateFromAdapter()
-
-        // Fires whenever adapter properties are updated (external changes or QML changes)
-        onFileChanged: updateFromAdapter()
+        onFileChanged: {
+            reload()
+            Qt.callLater(updateFromAdapter)
+        }
     }
 
     function updateFromAdapter() {
-        reload()
-        // Only assign if value is different to trigger QML bindings
-        if (Config.text !== file.adapter.text) Config.text = file.adapter.text
-        if (Config.count !== file.adapter.count) Config.count = file.adapter.count
-        if (Config.enabled !== file.adapter.enabled) Config.enabled = file.adapter.enabled
+        // sync top-level fields
+        Config.text = file.adapter.text
+        Config.launcher.enabled = file.adapter.launcher.enabled
+        Config.bar.enabled = file.adapter.bar.enabled
 
-        console.log("[Config] Updated:", Config.text, Config.count, Config.enabled)
+        console.log("[Config] Updated:", Config.text, Config.launcher.enabled)
     }
 
     function reload() {
@@ -43,9 +52,8 @@ QtObject {
 
     function save() {
         file.adapter.text = Config.text
-        file.adapter.count = Config.count
-        file.adapter.enabled = Config.enabled
+        file.adapter.launcher.enabled = Config.launcher.enabled
+        file.adapter.bar.enabled = Config.bar.enabled
         file.writeAdapter()
     }
 }
-
