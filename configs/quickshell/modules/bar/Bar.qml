@@ -24,7 +24,7 @@ PanelWindow {
 
         Text {
             anchors.centerIn: parent
-            text: DateTime.timeString
+            text: DateTime.getTimeString(Config.bar.clockFormatShort)
             color: "white"
             font.pixelSize: 18
         }

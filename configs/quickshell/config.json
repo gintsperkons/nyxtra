@@ -4,6 +4,7 @@
     "enabled":false
   },
   "bar":{
-    "enabled":true
+    "enabled":true,
+    "clockFormatShort":"HH:mm:ss"
   }
 }
