@@ -5,6 +5,6 @@
   },
   "bar":{
     "enabled":true,
-    "clockFormatShort":"HH:mm:ss"
+    "clockFormatShort":"HH:mm"
   }
 }
