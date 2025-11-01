@@ -11,14 +11,14 @@ QtObject {
 
   // Top-level config values
   property QtObject launcher: QtObject {
-    property bool enabled: false
+    property bool enabled: true
     property string backgroundColor: "#112233"
     property string borderColor: "#111111"
     property string cursorColor: "#223344"
     property string textColor: "#ffffff"
   }
   property QtObject bar: QtObject {
-    property bool enabled: false
+    property bool enabled: true
     property string clockFormatShort: "HH:mm"
   }
 
@@ -30,14 +30,14 @@ QtObject {
     adapter: JsonAdapter {
       id: adapter
       property JsonObject launcher: JsonObject {
-        property bool enabled
+        property bool enabled: launcher.enabled
         property string backgroundColor
         property string borderColor
         property string cursorColor
         property string textColor
       }
       property JsonObject bar: JsonObject {
-        property bool enabled
+        property bool enabled: launcher.enabled
         property string clockFormatShort
       }
     }
@@ -50,29 +50,45 @@ QtObject {
   }
 
   function mergeConfig(target, source) {
-    for (let key in source) {
-      // Skip internal Qt properties and signals
-      if (!target.hasOwnProperty(key)) continue;
-      if (key.endsWith("Changed") || key.startsWith("_")) continue;
+      if (!source) return;
 
-      let value = source[key];
+      for (let key in source) {
+          // skip internal Qt properties
+          if (!target.hasOwnProperty(key)) continue;
+          if (key.endsWith("Changed") || key.startsWith("_")) continue;
 
-      if (value === undefined || typeof value === "function")
-          continue;
+          let value = source[key];
 
-      // Recurse for nested objects
-      if (typeof value === "object" && value !== null) {
-          mergeConfig(target[key], value);
-      } else {
-          target[key] = value;
+          // skip functions
+          if (typeof value === "function") continue;
+
+          // skip null or undefined
+          if (value === null || value === undefined) continue;
+
+          // optionally skip empty strings
+          if (typeof value === "string" && value.trim() === "") continue;
+1
+          console.log(value)
+
+          // merge objects recursively
+          if (typeof value === "object") {
+              if (target[key] === null || target[key] === undefined) {
+                  target[key] = {};
+              }
+              mergeConfig(target[key], value);
+          } else {
+              // only assign if different
+              console.log(`Setting ${key} to ${value}`);
+              target[key] = value;
+          }
       }
-    }
   }
 
 
+
   function updateFromAdapter() {
-      mergeConfig(Config.launcher, file.adapter.launcher)
-      mergeConfig(Config.bar, file.adapter.bar)
+      mergeConfig(config.launcher, file.adapter.launcher)
+      mergeConfig(config.bar, file.adapter.bar)
   }
 
 
