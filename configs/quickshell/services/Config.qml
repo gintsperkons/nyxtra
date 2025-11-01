@@ -1,62 +1,85 @@
 pragma Singleton
 import QtQuick
+import QtQuick
+import Quickshell
+import Quickshell.Wayland
+import Quickshell.Hyprland
 import Quickshell.Io
 
 QtObject {
-    id: config
+  id: config
 
-    // Top-level config values
-    property string text
-    property QtObject launcher: QtObject {
+  // Top-level config values
+  property QtObject launcher: QtObject {
+    property bool enabled: false
+    property string backgroundColor: "#112233"
+    property string borderColor: "#111111"
+    property string cursorColor: "#223344"
+    property string textColor: "#ffffff"
+  }
+  property QtObject bar: QtObject {
+    property bool enabled: false
+    property string clockFormatShort: "HH:mm"
+  }
+
+  // FileView watches and syncs config.json
+  property var file: FileView {
+    path: Qt.resolvedUrl("../config.json")
+    watchChanges: true
+
+    adapter: JsonAdapter {
+      id: adapter
+      property JsonObject launcher: JsonObject {
         property bool enabled
-    }
-    property QtObject bar: QtObject {
+        property string backgroundColor
+        property string borderColor
+        property string cursorColor
+        property string textColor
+      }
+      property JsonObject bar: JsonObject {
         property bool enabled
         property string clockFormatShort
+      }
     }
 
-    // FileView watches and syncs config.json
-    property var file: FileView {
-        path: Qt.resolvedUrl("../config.json")
-        watchChanges: true
-
-        adapter: JsonAdapter {
-            id: adapter
-            property string text
-            property JsonObject launcher: JsonObject {
-                property bool enabled: false
-            }
-            property JsonObject bar: JsonObject {
-                property bool enabled: false
-                property string clockFormatShort: "H:m"
-            }
-        }
-
-        onLoaded: updateFromAdapter()
-        onFileChanged: {
-            reload()
-            Qt.callLater(updateFromAdapter)
-        }
+    onLoaded: updateFromAdapter()
+    onFileChanged: {
+      reload()
+      Qt.callLater(updateFromAdapter)
     }
+  }
 
-    function updateFromAdapter() {
-        // sync top-level fields
-        Config.text = file.adapter.text
-        Config.launcher.enabled = file.adapter.launcher.enabled
-        Config.bar.enabled = file.adapter.bar.enabled
-        Config.bar.clockFormatShort = file.adapter.bar.clockFormatShort
+  function mergeConfig(target, source) {
+    for (let key in source) {
+      // Skip internal Qt properties and signals
+      if (!target.hasOwnProperty(key)) continue;
+      if (key.endsWith("Changed") || key.startsWith("_")) continue;
 
-        console.log("[Config] Updated:", Config.text, Config.launcher.enabled)
+      let value = source[key];
+
+      if (value === undefined || typeof value === "function")
+          continue;
+
+      // Recurse for nested objects
+      if (typeof value === "object" && value !== null) {
+          mergeConfig(target[key], value);
+      } else {
+          target[key] = value;
+      }
     }
+  }
 
-    function reload() {
-        file.reload()
-    }
 
-    function save() {
-        file.adapter.text = Config.text
-        file.adapter.launcher.enabled = Config.launcher.enabled
-        file.adapter.bar.enabled = Config.bar.enabled
-        file.writeAdapter()
-    }
+  function updateFromAdapter() {
+      mergeConfig(Config.launcher, file.adapter.launcher)
+      mergeConfig(Config.bar, file.adapter.bar)
+  }
+
+
+  function reload() {
+    file.reload()
+  }
+
+
+  //add export to the menu items
 }
