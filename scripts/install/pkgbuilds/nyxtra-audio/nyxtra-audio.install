@@ -1,0 +1,4 @@
+post_install() {
+  echo ">>> Enabling Audio (for all users)..."
+  systemctl --global enable pipewire.service wireplumber.service pipewire-pulse.service
+}

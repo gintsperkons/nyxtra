@@ -1,0 +1,19 @@
+pkgname=nyxtra-audio
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra Audio Dependencies Meta-Package'
+arch=('any')
+license=('custom:none')
+depends=(
+pipewire
+pipewire-alsa
+pipewire-pulse
+wireplumber
+pavucontrol
+)
+
+install="${pkgname}.install"
+
+
+
+
