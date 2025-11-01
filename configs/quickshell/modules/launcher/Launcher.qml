@@ -8,56 +8,113 @@ import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
     
-PanelWindow {
-    id: launcher
-    implicitWidth: 420
-    implicitHeight: 500
-    visible: GlobalStates.launcherOpen
-    color: "transparent"
 
-    WlrLayershell.layer: WlrLayer.Overlay
+Scope {
+    id: root
 
-    // If you removed click-through, DO NOT include mask: Region {}
+    Loader {
+        id: loader   
+        active: GlobalStates.launcherOpen 
+       
+        sourceComponent:PanelWindow {
+            id: launcher
+            color: "transparent"
+            WlrLayershell.layer: WlrLayer.Overlay
+            implicitWidth: 300
 
+            readonly property HyprlandMonitor monitor: Hyprland.monitorFor(launcher.screen)
+            property bool monitorIsFocused: (Hyprland.focusedMonitor?.id == monitor?.id)
 
-  	// Give the window an empty click mask so all clicks pass through it.
-    Rectangle {
-        anchors.fill: parent
-        color: "#888888"
-        radius: 10
+            exclusionMode: ExclusionMode.Ignore
+            WlrLayershell.namespace: "quickshell:launcher"
+            WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 
-        TextField {
-            id: search
-            placeholderText: "Search apps…"
-            focus: true
-            activeFocusOnPress: true
-            anchors.centerIn: parent
-            text: Config.text
-            font.pixelSize: 20
-            color: "white"
-        }
-    }
+            mask: Region {
+                item:bg
+            }
+
+            Rectangle {
+                id: bg
+                anchors.fill: parent
+                color: "#888888"
+                focus: true
+                radius: 10
+                Label {
+                    id: search
+
+                    color: "#444"            // text color
+                    background: Rectangle {   // background of the input
+                        color: "#888"         // background color
+                        radius: 6             // rounded corners
+                        border.color: "#777" // border color
+                        border.width: 2       // border thickness
+                    }
+                    focus:false
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 0
+                    padding: 4
+                    font.pixelSize: 20
+
+                    
+                }
     
+                Keys.onPressed: {
+                    if (event.key === Qt.Key_Escape) {
+                        GlobalStates.launcherOpen = false
+                        search.text = ""      // clear input
+                    } else if (event.key === Qt.Key_Backspace) {
+                        search.text = search.text.slice(0, -1)
+                    } else {
+                        search.text += event.text   // append typed character
+                    }
+                }
+
+             
+            }
+
+    
+        
+        
+            HyprlandFocusGrab { // Click outside to close
+                id: grab
+                windows: [ launcher ]
+                active: loader.active
+                onCleared: () => {
+                    if (!active) GlobalStates.launcherOpen = false;
+                }
+
+                
+            }
+        }
+    
+        MouseArea {
+            anchors.fill: parent // cover full screen
+            propagateComposedEvents: true
+            onClicked: {
+                if (launcher.containsMouse) {
+                    GlobalStates.launcherOpen = false
+                }
+            }
+        }
+
+ 
+    }
+                   
     function toggleLauncher() {
         GlobalStates.launcherOpen = !GlobalStates.launcherOpen
+        
     }
+    
+  
 
-    HyprlandFocusGrab { // Click outside to close
-        id: grab
-        windows: [ launcher ]
-        active: launcher.active
-        onCleared: () => {
-            if (!active) GlobalStates.launcherOpen = false;
-        }
-    }
-
+    
     GlobalShortcut {
         name: "launcherToggle"
         description: "Toggle launcher"
         onPressed: {
-            launcher.toggleLauncher();
+            root.toggleLauncher();
         }
     }
-
 }
-
