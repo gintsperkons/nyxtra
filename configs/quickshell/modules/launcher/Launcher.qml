@@ -11,7 +11,8 @@ import Quickshell.Hyprland
 
 Scope {
     id: root
-
+    property var appList: []
+    property int selected: 0
     Loader {
         id: loader   
         active: GlobalStates.launcherOpen 
@@ -20,7 +21,8 @@ Scope {
             id: launcher
             color: "transparent"
             WlrLayershell.layer: WlrLayer.Overlay
-            implicitWidth: 300
+            implicitWidth: 800
+            implicitHeight:600
 
             readonly property HyprlandMonitor monitor: Hyprland.monitorFor(launcher.screen)
             property bool monitorIsFocused: (Hyprland.focusedMonitor?.id == monitor?.id)
@@ -59,22 +61,69 @@ Scope {
 
                     
                 }
+                Rectangle {
+                  id:selector
+                  
+                  anchors.left: parent.left
+                  anchors.right: parent.right
+                  implicitHeight:32
+                  color: "#b3b3b3"  
+                  y: search.height+selected*36   
+                
+                }
+                ListView {
+                  id: elementList
+                  anchors.top: search.bottom
+                  anchors.left: parent.left
+                  anchors.right: parent.right
+                  anchors.bottom: parent.bottom
+                  clip: true
+                  spacing: 4
+
+                  model:appList
+
+                  delegate: Row {
+                      spacing: 8
+                      height: 32
+
+                      Text {
+                          text: modelData.name
+                          font.pixelSize: 14
+                      }
+                  }
+                }
     
-                Keys.onPressed: {
+                Keys.onPressed: (event) => {
                     if (event.key === Qt.Key_Escape) {
                         GlobalStates.launcherOpen = false
                         search.text = ""      // clear input
+                    } else if (event.key === Qt.Key_Down){
+                      if (root.selected < appList.length - 1)
+                          root.selected += 1
+                    } else if (event.key === Qt.Key_Up){
+                      if (root.selected > 0)
+                          root.selected -= 1
+                      console.log(selected)
+                      console.log(selected)
+                    } else if (event.key === Qt.Key_Return){
+                        if (appList.length > root.selected){
+                          appList[root.selected].execute()
+                          GlobalStates.launcherOpen = false
+                        }
                     } else if (event.key === Qt.Key_Backspace) {
                         search.text = search.text.slice(0, -1)
+                        appList = Applications.search(search.text).slice();
                     } else {
                         search.text += event.text   // append typed character
+                        appList = Applications.search(search.text).slice();
+                        console.log(appList.length)
+
                     }
                 }
 
              
             }
 
-    
         
         
             HyprlandFocusGrab { // Click outside to close
@@ -115,6 +164,8 @@ Scope {
         description: "Toggle launcher"
         onPressed: {
             root.toggleLauncher();
+            root.selected = 0
+            appList = Applications.search("")
         }
     }
 }
