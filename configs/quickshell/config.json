@@ -1,7 +1,7 @@
 {
   "text":"Hello World!",
   "launcher":{
-    "enabled":false
+    "enabled":true
   },
   "bar":{
     "enabled":true,

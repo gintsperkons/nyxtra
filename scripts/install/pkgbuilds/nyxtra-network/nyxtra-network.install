@@ -1,4 +1,4 @@
 post_install() {
   echo ">>> Enabling NetworkManager..."
-  systemctl enable NetworkManager.service || true
+  systemctl enable --now NetworkManager.service || true
 }

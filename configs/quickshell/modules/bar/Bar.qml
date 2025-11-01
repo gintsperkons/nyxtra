@@ -5,8 +5,8 @@ import qs.services
 
 PanelWindow {
     id: panel
-    width: 300
-    height: 24
+    implicitWidth: 300
+    implicitHeight: 24
     visible: true
     anchors.top: true
 
