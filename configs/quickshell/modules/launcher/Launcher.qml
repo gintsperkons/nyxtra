@@ -109,6 +109,13 @@ Scope {
             height: 32
             focus: false
             enabled: false
+            Image {
+              id: appIcon
+              anchors.verticalCenter: parent.verticalCenter
+              width: 32
+              height: 32
+              source: modelData.icon
+          }
 
             Text {
               anchors.verticalCenter: parent.verticalCenter
