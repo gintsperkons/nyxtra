@@ -4,33 +4,45 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
+import QtCore
 
 QtObject {
     id: config
-
+      function expandHome(path) {
+        const home = StandardPaths.writableLocation(StandardPaths.HomeLocation)
+        return path.replace(/^~(?=\/|$)/, home);
+      }
 
     // Helper function to find the first existing image
     function firstExistingIcon(iconName) {
         if (!iconName) return "icons/default.png";
 
         let paths = [
+            expandHome("~/.local/share/icons/" + iconName + ".png"),
             "/usr/share/pixmaps/" + iconName + ".svg",
-            "/usr/share/icons/hicolor/scalable/apps/" + iconName + ".svg",
-            "/usr/share/icons/hicolor/symbolic/apps/" + iconName + ".svg",
-            "/usr/share/pixmaps/" + iconName + ".png",
+            expandHome("~/.local/share/icons/hicolor/256x256/apps/" + iconName + ".png"),
             "/usr/share/icons/hicolor/256x256/apps/" + iconName + ".png",
+            "/usr/share/pixmaps/" + iconName + ".png",
+            expandHome("~/.local/share/icons/hicolor/128x128/apps/" + iconName + ".png"),
             "/usr/share/icons/hicolor/128x128/apps/" + iconName + ".png",
+            expandHome("~/.local/share/icons/hicolor/64x64/apps/" + iconName + ".png"),
             "/usr/share/icons/hicolor/64x64/apps/" + iconName + ".png",
+            expandHome("~/.local/share/icons/hicolor/32x32/apps/" + iconName + ".png"),
             "/usr/share/icons/hicolor/32x32/apps/" + iconName + ".png",
+            expandHome("~/.local/share/icons/hicolor/16x16/apps/" + iconName + ".png"),
             "/usr/share/icons/hicolor/16x16/apps/" + iconName + ".png",
             "/usr/share/icons/AdwaitaLegacy/32x32/legacy/" + iconName + ".png"
+            "/usr/share/icons/hicolor/symbolic/apps/" + iconName + ".svg",
+            "/usr/share/icons/hicolor/scalable/apps/" + iconName + ".svg",
         ];
+
 
         // Temporary hidden image
         let tmpImage = Qt.createQmlObject('import QtQuick 2.0; Image { visible: false }', Qt.application);
 
 
         for (let p of paths) {
+          
             tmpImage.source = p;
             if (tmpImage.status === Image.Ready) {
                 tmpImage.destroy();
