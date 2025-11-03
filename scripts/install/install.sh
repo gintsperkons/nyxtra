@@ -18,6 +18,7 @@ ORDER=(
   "nyxtra-network" 
   "nyxtra-nvim"
   "nyxtra-audio"
+  "nyxtra-gaming"
 )
 
 
