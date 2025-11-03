@@ -52,3 +52,22 @@ if [[ ${#AUR_PKG[@]} -gt 0 ]]; then
     echo "🚀 Installing all aur packages in order..."
     paru -S "${AUR_PKG[@]}" --needed --noconfirm
 fi
+
+
+
+echo "Installing WebApps"
+
+# Declare an associative array
+declare -A WEB_APPS=(
+  ["YouTube"]="https://www.youtube.com"
+  ["ClickUp"]="https://app.clickup.com"
+  ["Twitch"]="https://www.twitch.tv"
+)
+
+for name in "${!WEB_APPS[@]}"; do
+  url="${WEB_APPS[$name]}"
+  "$NYXTRA_HOME/bin/nyxtra-webapp-install" "$name" "$url"
+done
+
+
+update-desktop-database ~/.local/share/applications

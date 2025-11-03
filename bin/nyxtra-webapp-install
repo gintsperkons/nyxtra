@@ -16,7 +16,7 @@ cat > "$desktop_file" <<EOL
 Version=1.0
 Name=$name
 Comment=$name Web App
-Exec=brave --app="$url"
+Exec=chromium --app="$url"
 Icon=$name
 Terminal=false
 Type=Application

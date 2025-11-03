@@ -16,7 +16,10 @@ QtObject {
     // Helper function to find the first existing image
     function firstExistingIcon(iconName) {
         if (!iconName) return "icons/default.png";
-
+        // If iconName is an absolute path → return as is
+        if (iconName.startsWith("/"))
+            return iconName;
+        iconName = iconName.replace(/ /g, "-");
         let paths = [
             expandHome("~/.local/share/icons/" + iconName + ".png"),
             "/usr/share/pixmaps/" + iconName + ".svg",
@@ -31,7 +34,7 @@ QtObject {
             "/usr/share/icons/hicolor/32x32/apps/" + iconName + ".png",
             expandHome("~/.local/share/icons/hicolor/16x16/apps/" + iconName + ".png"),
             "/usr/share/icons/hicolor/16x16/apps/" + iconName + ".png",
-            "/usr/share/icons/AdwaitaLegacy/32x32/legacy/" + iconName + ".png"
+            "/usr/share/icons/AdwaitaLegacy/32x32/legacy/" + iconName + ".png",
             "/usr/share/icons/hicolor/symbolic/apps/" + iconName + ".svg",
             "/usr/share/icons/hicolor/scalable/apps/" + iconName + ".svg",
         ];
