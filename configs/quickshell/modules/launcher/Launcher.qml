@@ -1,6 +1,7 @@
 
 import qs
 import qs.services
+import qs.services.models
 import QtQuick
 import QtQuick.Controls
 import Quickshell
@@ -28,7 +29,6 @@ Scope {
       readonly property HyprlandMonitor monitor: Hyprland.monitorFor(launcher.screen)
       property bool monitorIsFocused: (Hyprland.focusedMonitor?.id == monitor?.id)
 
-      exclusionMode: ExclusionMode.Ignore
       WlrLayershell.namespace: "quickshell:launcher"
 
       Rectangle {
@@ -77,6 +77,7 @@ Scope {
               }
             } else if (event.key === Qt.Key_Return){
               if (appList.length > launcherRoot.selected){
+                ApplicationModel.incrementUsageCount(appList[launcherRoot.selected].name)
                 appList[launcherRoot.selected].execute()
                 launcherRoot.close()
               }

@@ -13,7 +13,11 @@ import Quickshell.Hyprland
 
 
 ShellRoot {
-    
+    Component.onCompleted: {
+        Cache.init()
+    }
+
+
     LazyLoader { active: Config.launcher.enabled; component: Launcher{} }
     LazyLoader { active: Config.bar.enabled; component: Bar{} }
 
