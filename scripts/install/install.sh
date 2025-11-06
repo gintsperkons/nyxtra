@@ -16,6 +16,19 @@ ORDER=(
   "nyxtra-gaming"
 )
 
+
+# Detect GPU
+gpu_info=$(lspci | grep -i VGA)
+
+if [[ $gpu_info == *"[NVIDIA]"* ]]; then
+    ORDER+=("nyxtra-gpu-nvidia")
+elif [[ $gpu_info == *"[AMD/ATI]"* ]]; then
+    ORDER+=("nyxtra-gpu-amd")
+elif [[ $gpu_info == *"[Intel]"* ]]; then
+    ORDER+=("nyxtra-gpu-intel")
+fi
+
+
 AUR_PKG=(
   "brave-bin"
   "visual-studio-code-bin"

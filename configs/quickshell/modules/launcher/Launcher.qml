@@ -12,8 +12,10 @@ import Quickshell.Hyprland
 
 Scope {
   id: launcherRoot
+  property real wheelAccumulator: 0 
   property var appList: []
   property int selected: 0
+  
 
   Loader {
     id: loader   
@@ -44,9 +46,9 @@ Scope {
           focus: true
           color: Config.launcher.textColor
           background: Rectangle {  
-              color:  Config.launcher.backgroundColor 
-              radius: 6          
-              border.color: Config.launcher.borderColor 
+            color:  Config.launcher.backgroundColor 
+            radius: 6          
+            border.color: Config.launcher.borderColor 
           }
           anchors.top: parent.top
           anchors.left: parent.left
@@ -67,12 +69,14 @@ Scope {
               if (launcherRoot.selected < appList.length - 1)
               {
                 launcherRoot.selected += 1
+                selector.hoverY = -1
                 elementList.positionViewAtIndex(launcherRoot.selected, ListView.Beginning)
               }
             } else if (event.key === Qt.Key_Up){
               if (launcherRoot.selected > 0)
               {
                 launcherRoot.selected -= 1
+                selector.hoverY = -1
                 elementList.positionViewAtIndex(launcherRoot.selected, ListView.Beginning)
               }
             } else if (event.key === Qt.Key_Return){
@@ -85,13 +89,14 @@ Scope {
           }
         }
         Rectangle {
+          property real hoverY: -1
           id:selector
           focus: false
           anchors.left: parent.left
           anchors.right: parent.right
           implicitHeight:32
           color: Config.launcher.cursorColor  
-          y:  (selected * 36)+32-elementList.contentY
+          y: hoverY >= 0 ? hoverY : (selected * 36) + 32 - elementList.contentY
           border.color: Config.launcher.borderColor 
           border.width: 1
         }
@@ -103,6 +108,7 @@ Scope {
           anchors.right: parent.right
           anchors.bottom: parent.bottom
           clip: true
+          interactive: false
           spacing: 4
           model:appList
 
@@ -116,7 +122,7 @@ Scope {
               width: 32
               height: 32
               source: modelData.icon
-          }
+            }
 
             Text {
               anchors.verticalCenter: parent.verticalCenter
@@ -125,6 +131,66 @@ Scope {
               text: modelData.name
               font.pixelSize: 14
               color: Config.launcher.textColor
+            }
+          }
+        }
+        MouseArea {
+          anchors.fill: parent
+          hoverEnabled: true
+          propagateComposedEvents: true   // allow events to continue to children
+          acceptedButtons: Qt.AllButtons
+            onPositionChanged: {
+              // Compute relative hover Y
+              var relativeY = mouse.y - elementList.y
+              // Include scrolled content offset
+              var totalY = relativeY + elementList.contentY
+              // Compute hover position for the selector
+              selector.hoverY = Math.floor(totalY / 36) * 36 - elementList.contentY + 32
+              var idx = Math.floor(totalY / 36)  // 32 px height + 4 px spacing
+
+              if (idx >= 0 && idx < elementList.count) {
+                launcherRoot.selected = idx
+              }
+            }
+
+          onWheel: {
+            wheelAccumulator += wheel.angleDelta.y / 120.0  // typical mouse wheel step is 120
+            // Only move selection when accumulated delta passes ±1
+            if (wheelAccumulator >= 1) {
+              launcherRoot.selected = Math.min(launcherRoot.selected + 1, elementList.count - 1)
+              wheelAccumulator -= 1
+            } else if (wheelAccumulator <= -1) {
+              launcherRoot.selected = Math.max(launcherRoot.selected - 1, 0)
+              wheelAccumulator += 1
+            }
+            wheel.accepted = true
+          }
+
+          onClicked: {
+            // Y relative to the top of the ListView
+            var relativeY = mouse.y - elementList.y
+
+            // Include scrolled content offset
+            var totalY = relativeY + elementList.contentY
+
+            // Compute the index
+            var idx = Math.floor(totalY / 36) // 32 px height + 4 px spacing
+
+            if (idx >= 0 && idx < elementList.count) {
+              console.log("Clicked item:", idx, "Name:", launcherRoot.appList[idx].name)
+
+              // Update selected index
+              launcherRoot.selected = idx
+
+              // Scroll ListView to show the selected item
+              elementList.positionViewAtIndex(idx, ListView.Beginning)
+
+              // Execute application if desired
+              ApplicationModel.incrementUsageCount(launcherRoot.appList[idx].name)
+              launcherRoot.appList[idx].execute()
+
+              // Close launcher
+              launcherRoot.close()
             }
           }
         }

@@ -1,0 +1,12 @@
+pkgname=nyxtra-gpu-intel
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra Intel graphics dependencies meta-package'
+arch=('any')
+license=('custom:none')
+depends=(
+    "mesa"             # OpenGL/Vulkan libraries
+    "lib32-mesa"       # 32-bit support
+    "vulkan-intel"     # Vulkan support
+    "intel-media-driver" # optional hardware acceleration
+)

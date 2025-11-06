@@ -24,3 +24,5 @@ for folder in "${CONFIG_FOLDERS[@]}"; do
     mkdir -p "$DEST"
     cp -r  "$SRC"* "$DEST"
 done
+
+hyprctl reload

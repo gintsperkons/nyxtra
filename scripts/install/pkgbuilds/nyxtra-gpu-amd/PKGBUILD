@@ -1,0 +1,12 @@
+pkgname=nyxtra-gpu-amd
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra AMD graphics dependencies meta-package'
+arch=('any')
+license=('custom:none')
+depends=(
+    "xf86-video-amdgpu"      # AMD open-source driver
+    "mesa"                   # OpenGL/Vulkan libraries
+    "lib32-mesa"             # 32-bit Vulkan/OpenGL support
+    "vulkan-radeon"          # Vulkan support
+)
