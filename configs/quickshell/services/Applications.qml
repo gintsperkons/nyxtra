@@ -2,6 +2,7 @@ import qs.services.models
 
 pragma Singleton
 import QtQuick
+import QtCore
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
@@ -9,22 +10,30 @@ import Quickshell.Io
 
 QtObject {
     id: config
+    // Get home directory
+    property string homeDir: StandardPaths.writableLocation(StandardPaths.HomeLocation)
 
 
     // Helper function to find the first existing image
     function firstExistingIcon(iconName) {
-        if (!iconName) return "icons/default.png";
+
 
         let paths = [
+            homeDir+"/.local/share/icons/"+iconName+".png",
+            homeDir+"/.local/share/icons/hicolor/256x256/apps/"+iconName+".png",
+            "/usr/share/icons/hicolor/256x256/apps/" + iconName + ".png",
+            homeDir+"/.local/share/icons/hicolor/128x128/apps/"+iconName+".png",
+            "/usr/share/icons/hicolor/128x128/apps/" + iconName + ".png",
+            homeDir+"/.local/share/icons/hicolor/64x64/apps/"+iconName+".png",
+            "/usr/share/icons/hicolor/64x64/apps/" + iconName + ".png",
             "/usr/share/pixmaps/" + iconName + ".svg",
+            "/usr/share/pixmaps/" + iconName + ".png",
+            homeDir+"/.local/share/icons/hicolor/32x32/apps/"+iconName+".png",
+            "/usr/share/icons/hicolor/32x32/apps/" + iconName + ".png",
+            homeDir+"/.local/share/icons/hicolor/16x16/apps/"+iconName+".png",
+            "/usr/share/icons/hicolor/16x16/apps/" + iconName + ".png",
             "/usr/share/icons/hicolor/scalable/apps/" + iconName + ".svg",
             "/usr/share/icons/hicolor/symbolic/apps/" + iconName + ".svg",
-            "/usr/share/pixmaps/" + iconName + ".png",
-            "/usr/share/icons/hicolor/256x256/apps/" + iconName + ".png",
-            "/usr/share/icons/hicolor/128x128/apps/" + iconName + ".png",
-            "/usr/share/icons/hicolor/64x64/apps/" + iconName + ".png",
-            "/usr/share/icons/hicolor/32x32/apps/" + iconName + ".png",
-            "/usr/share/icons/hicolor/16x16/apps/" + iconName + ".png",
             "/usr/share/icons/AdwaitaLegacy/32x32/legacy/" + iconName + ".png"
         ];
 
@@ -47,7 +56,7 @@ QtObject {
 
 
 
-    function search(query) {
+    function search(query = "") {
         const results = []
 
         // Build a map of usage counts
@@ -66,7 +75,7 @@ QtObject {
             const generic = (app.genericName || "").toLowerCase()
             const q = query.toLowerCase()
 
-            if (name.includes(q) || generic.includes(q)) {
+            if ((name.includes(q) || generic.includes(q))) {
                 results.push({
                     name: app.name,
                     execute: app.execute,

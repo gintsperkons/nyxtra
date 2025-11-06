@@ -143,7 +143,11 @@ Scope {
       }
     }
   }
-                  
+
+  Component.onCompleted: {
+    appList = Applications.search()
+  }
+
   function toggleLauncher() {
     GlobalStates.launcherOpen = !GlobalStates.launcherOpen;
   }

@@ -15,6 +15,7 @@ import Quickshell.Hyprland
 ShellRoot {
     Component.onCompleted: {
         Cache.init()
+        Launcher.init()
     }
 
 

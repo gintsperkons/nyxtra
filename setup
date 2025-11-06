@@ -5,11 +5,19 @@ set -e
 # Copy shared to ~/.local/share/nyxtra
 source $HOME/.local/share/nyxtra/scripts/data/enviroment.sh
 
-printf 'ārgs: %s\n' "$1"
 if [[ $1 == config ]]; then
   bash $NYXTRA_HOME/scripts/install/config.sh
   exit 0
 fi
+
+case "$1" in
+    webapps|paru|build|local|aur)
+        echo "Running phase: $1"
+        bash "$NYXTRA_HOME/scripts/install/install.sh" "$1"
+        exit 0
+        ;;
+esac
+
 
 
 sudo cp -f $NYXTRA_HOME/defaults/pacman.conf /etc/pacman.conf
