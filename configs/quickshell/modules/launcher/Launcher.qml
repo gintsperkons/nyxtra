@@ -157,11 +157,16 @@ Scope {
             wheelAccumulator += wheel.angleDelta.y / 120.0  // typical mouse wheel step is 120
             // Only move selection when accumulated delta passes ±1
             if (wheelAccumulator >= 1) {
+              selector.hoverY = -1
               launcherRoot.selected = Math.min(launcherRoot.selected + 1, elementList.count - 1)
               wheelAccumulator -= 1
+              elementList.positionViewAtIndex(launcherRoot.selected, ListView.Beginning)
+
             } else if (wheelAccumulator <= -1) {
+              selector.hoverY = -1
               launcherRoot.selected = Math.max(launcherRoot.selected - 1, 0)
               wheelAccumulator += 1
+              elementList.positionViewAtIndex(launcherRoot.selected, ListView.Beginning)
             }
             wheel.accepted = true
           }
