@@ -6,4 +6,5 @@ arch=('any')
 license=('custom:none')
 depends=(
     godot
+    scons
 )
