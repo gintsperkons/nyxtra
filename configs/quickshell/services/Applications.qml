@@ -80,6 +80,7 @@ QtObject {
                     name: app.name,
                     execute: app.execute,
                     icon: firstExistingIcon(app.icon),
+                    type: "application",
                     usageCount: usageMap[app.name] || 0 // default to 0 if not in cache
                 })
             }

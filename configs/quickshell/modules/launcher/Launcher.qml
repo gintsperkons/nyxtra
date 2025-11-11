@@ -13,9 +13,11 @@ import Quickshell.Hyprland
 Scope {
   id: launcherRoot
   property real wheelAccumulator: 0 
-  property var appList: []
+  property var itemList: []
   property int selected: 0
   
+
+
 
   Loader {
     id: loader   
@@ -58,7 +60,10 @@ Scope {
           font.pixelSize: 20
           
           onTextChanged: {
-            launcherRoot.appList = Applications.search(text).slice()
+            launcherRoot.itemList = [
+              ...Applications.search(search.text),
+              ... PowerMenuItems.search(search.text)
+            ].slice()
             launcherRoot.selected = 0
           }
             
@@ -66,7 +71,7 @@ Scope {
             if (event.key === Qt.Key_Escape) {
                 launcherRoot.close()
             } else if (event.key === Qt.Key_Down){
-              if (launcherRoot.selected < appList.length - 1)
+              if (launcherRoot.selected < itemList.length - 1)
               {
                 launcherRoot.selected += 1
                 selector.hoverY = -1
@@ -80,9 +85,10 @@ Scope {
                 elementList.positionViewAtIndex(launcherRoot.selected, ListView.Beginning)
               }
             } else if (event.key === Qt.Key_Return){
-              if (appList.length > launcherRoot.selected){
-                ApplicationModel.incrementUsageCount(appList[launcherRoot.selected].name)
-                appList[launcherRoot.selected].execute()
+              if (itemList.length > launcherRoot.selected){
+                if (itemList[launcherRoot.selected].type == "application")
+                  ApplicationModel.incrementUsageCount(itemList[launcherRoot.selected].name)
+                itemList[launcherRoot.selected].execute()
                 launcherRoot.close()
               }
             }
@@ -110,12 +116,13 @@ Scope {
           clip: true
           interactive: false
           spacing: 4
-          model:appList
+          model:itemList
 
           delegate: Row {
             height: 32
             focus: false
             enabled: false
+            leftPadding: 10
             Image {
               id: appIcon
               anchors.verticalCenter: parent.verticalCenter
@@ -177,7 +184,7 @@ Scope {
             var idx = Math.floor(totalY / 36) // 32 px height + 4 px spacing
 
             if (idx >= 0 && idx < elementList.count) {
-              console.log("Clicked item:", idx, "Name:", launcherRoot.appList[idx].name)
+              console.log("Clicked item:", idx, "Name:", launcherRoot.itemList[idx].name)
 
               // Update selected index
               launcherRoot.selected = idx
@@ -186,8 +193,9 @@ Scope {
               elementList.positionViewAtIndex(idx, ListView.Beginning)
 
               // Execute application if desired
-              ApplicationModel.incrementUsageCount(launcherRoot.appList[idx].name)
-              launcherRoot.appList[idx].execute()
+              if (itemList[launcherRoot.selected].type == "application")
+                ApplicationModel.incrementUsageCount(launcherRoot.itemList[idx].name)
+              launcherRoot.itemList[idx].execute()
 
               // Close launcher
               launcherRoot.close()
@@ -203,15 +211,18 @@ Scope {
         windows: [ launcher ]
         active: loader.active
         onCleared: () => {
-            if (!active) launcherRoot.close;
-            search.text = ""
+          if (!active) launcherRoot.close;
+          search.text = ""
         }
       }
     }
   }
 
   Component.onCompleted: {
-    appList = Applications.search()
+    itemList = [
+      ...Applications.search(""),
+      ... PowerMenuItems.search("")
+    ].slice()
   }
 
   function toggleLauncher() {
@@ -227,7 +238,10 @@ Scope {
     onPressed: {
       launcherRoot.toggleLauncher();
       launcherRoot.selected = 0
-      appList = Applications.search("")
+      itemList = [
+        ...Applications.search(""),
+        ... PowerMenuItems.search("")
+      ].slice()
     }
   }
 }
