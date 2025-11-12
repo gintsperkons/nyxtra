@@ -60,6 +60,7 @@ Scope {
           font.pixelSize: 20
           
           onTextChanged: {
+            launcherRoot.itemList = []
             launcherRoot.itemList = [
               ...Applications.search(search.text),
               ... PowerMenuItems.search(search.text)
@@ -224,6 +225,7 @@ Scope {
   }
 
   Component.onCompleted: {
+    itemList = []
     itemList = [
       ...Applications.search(""),
       ... PowerMenuItems.search("")
@@ -243,6 +245,7 @@ Scope {
     onPressed: {
       launcherRoot.toggleLauncher();
       launcherRoot.selected = 0
+      itemList = []
       itemList = [
         ...Applications.search(""),
         ... PowerMenuItems.search("")
