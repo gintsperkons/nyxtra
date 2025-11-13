@@ -32,6 +32,7 @@ fi
 
 AUR_PKG=(
   "brave-bin"
+  "zen-browser-bin"
   "visual-studio-code-bin"
   "quickshell-git"
 )
