@@ -1,4 +1,4 @@
 post_install() {
   echo ">>> Enabling Ly greeter..."
-  systemctl enable ly.service || true
+  systemctl enable ly@tty1.service || true
 }

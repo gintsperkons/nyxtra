@@ -5,6 +5,10 @@
 name="$1"
 url="$2"
 
+mkdir -p "$HOME/.local/share/applications/"
+mkdir -p "$HOME/.local/share/icons/"
+
+
 # Lowercase filename for desktop file
 fname=$(echo "$name" | tr '[:upper:]' '[:lower:]')
 desktop_file="$HOME/.local/share/applications/$fname.desktop"

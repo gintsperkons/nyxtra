@@ -32,8 +32,10 @@ fi
 
 AUR_PKG=(
   "brave-bin"
+  "zen-browser-bin"
   "visual-studio-code-bin"
   "quickshell-git"
+  "sourcegit-bin"
 )
 
 declare -A WEB_APPS=(
@@ -83,6 +85,7 @@ phase_install_aur_packages() {
 
 phase_install_webapps() {
     echo "🌐 Installing WebApps..."
+    mkdir -p "$HOME/.local/share/applications"
     for name in "${!WEB_APPS[@]}"; do
         url="${WEB_APPS[$name]}"
         "$NYXTRA_HOME/bin/nyxtra-webapp-install" "$name" "$url"
