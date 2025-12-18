@@ -15,6 +15,7 @@ ORDER=(
   "nyxtra-audio"
   "nyxtra-gaming"
   "nyxtra-gamedev"
+  "nyxtra-filemanager"
 )
 
 
@@ -32,7 +33,7 @@ fi
 
 AUR_PKG=(
   "brave-bin"
-  "zen-browser-bin"
+  "zen-browser"
   "visual-studio-code-bin"
   "quickshell-git"
   "sourcegit-bin"

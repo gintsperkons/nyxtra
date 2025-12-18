@@ -1,6 +1,7 @@
 import qs.modules.launcher
 import qs.modules.bar
 import qs.services
+import qs
 
 
 
@@ -20,7 +21,15 @@ ShellRoot {
 
 
     LazyLoader { active: Config.launcher.enabled; component: Launcher{} }
-    LazyLoader { active: Config.bar.enabled; component: Bar{} }
+    LazyLoader { active: Config.bar.enabled && GlobalStates.barShow; component: Bar{} }
 
 
+
+GlobalShortcut {
+name: "barVisibleToggle"
+description: "Toggle bar shown"
+onPressed: {
+    GlobalStates.barShow = !GlobalStates.barShow;
+}
+}
 }

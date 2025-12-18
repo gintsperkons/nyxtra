@@ -1,7 +1,7 @@
 pkgname=nyxtra-gaming
 pkgver=1.0
 pkgrel=1
-pkgdesc='Nyxtra Login Dependencies Meta-Package'
+pkgdesc='Nyxtra Gaming Dependencies Meta-Package'
 arch=('any')
 license=('custom:none')
 depends=(
