@@ -65,15 +65,22 @@ QtObject {
         for (let i = 0; i < appUsages.length; i++) {
             usageMap[appUsages[i].name] = appUsages[i].usageCount
         }
-
+        const seen = new Set()
         // Search apps
         for (let i = 0; i < DesktopEntries.applications.values.length; i++) {
             const app = DesktopEntries.applications.values[i]
             if (!app) continue
 
+            
+
+
             const name = (app.name || "").toLowerCase()
             const generic = (app.genericName || "").toLowerCase()
             const q = query.toLowerCase()
+
+            if (seen.has(name) || app.noDisplay) continue
+            seen.add(name)
+
 
             if ((name.includes(q) || generic.includes(q))) {
                 results.push({

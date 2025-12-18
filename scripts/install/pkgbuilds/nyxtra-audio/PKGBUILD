@@ -8,6 +8,7 @@ depends=(
 pipewire
 pipewire-alsa
 pipewire-pulse
+pipewire-jack
 wireplumber
 pavucontrol
 )
