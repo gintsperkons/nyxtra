@@ -1,0 +1,2 @@
+NYXTRA_HOME="$HOME/.local/share/nyxtra"
+bash "$NYXTRA_HOME/setup" $@
