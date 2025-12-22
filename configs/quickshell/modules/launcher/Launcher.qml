@@ -140,6 +140,15 @@ Scope {
               font.pixelSize: 14
               color: Config.launcher.textColor
             }
+
+            Text {
+              anchors.verticalCenter: parent.verticalCenter
+              leftPadding: 10
+              focus: false
+              text: modelData.categories.join(", ")
+              font.pixelSize: 14
+              color: Config.launcher.textColorSecondary
+            }
           }
         }
         MouseArea {

@@ -74,19 +74,22 @@ QtObject {
             
 
 
-            const name = (app.name || "").toLowerCase()
-            const generic = (app.genericName || "").toLowerCase()
+            const name = (app.name || "").toLowerCase();
+            const generic = (app.genericName || "").toLowerCase();
+            const categories = (app.categories || []).map(c => (c || "").toLowerCase());
             const q = query.toLowerCase()
 
             if (seen.has(name) || app.noDisplay) continue
             seen.add(name)
 
 
-            if ((name.includes(q) || generic.includes(q))) {
+            if ((name.includes(q) || generic.includes(q) || categories.some(c => c.includes(q)) )) {
+                console.log(JSON.stringify(app));
                 results.push({
                     name: app.name,
                     execute: app.execute,
                     icon: firstExistingIcon(app.icon),
+                    categories: app.categories,
                     type: "application",
                     usageCount: usageMap[app.name] || 0 // default to 0 if not in cache
                 })

@@ -16,6 +16,7 @@ QtObject {
     property string borderColor: "#111111"
     property string cursorColor: "#223344"
     property string textColor: "#ffffff"
+    property string textColorSecondary: "#777777"
   }
   property QtObject bar: QtObject {
     property bool enabled: true
@@ -35,6 +36,7 @@ QtObject {
         property string borderColor
         property string cursorColor
         property string textColor
+        property string textColorSecondary
       }
       property JsonObject bar: JsonObject {
         property bool enabled: launcher.enabled
