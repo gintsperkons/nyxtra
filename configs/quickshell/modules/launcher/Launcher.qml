@@ -15,7 +15,29 @@ Scope {
   property real wheelAccumulator: 0 
   property var itemList: []
   property int selected: 0
-  
+  property var menuCrumbs: []
+  property var menuList: [
+          {
+          name: "Applications",
+          type: "menu",
+          persist: true,
+          execute: () => {
+            itemList = [
+              ...Applications.search("")
+            ].slice()
+          }
+        },
+        {
+          name: "Power",
+          type: "menu",
+          persist: true,
+          execute: () => {
+            itemList = [
+              ...PowerMenuItems.search("")
+            ].slice()
+          }
+        }
+  ]
 
 
 
@@ -70,7 +92,15 @@ Scope {
             
           Keys.onPressed: (event) => {
             if (event.key === Qt.Key_Escape) {
-                launcherRoot.close()
+                if (menuCrumbs.length < 1)
+                {
+                  launcherRoot.close()
+                  return;
+                }
+                menuCrumbs.pop();
+                itemList = [
+                  ...menuList
+                ].slice() 
             } else if (event.key === Qt.Key_Down){
               if (launcherRoot.selected < itemList.length - 1)
               {
@@ -89,8 +119,9 @@ Scope {
               if (itemList.length > launcherRoot.selected){
                 if (itemList[launcherRoot.selected].type == "application")
                   ApplicationModel.incrementUsageCount(itemList[launcherRoot.selected].name)
+                if (itemList[launcherRoot.selected].type == "menu") menuCrumbs.push(itemList[launcherRoot.selected].name);
+                if (!itemList[launcherRoot.selected].persist) launcherRoot.close();
                 itemList[launcherRoot.selected].execute()
-                launcherRoot.close()
               }
             }
           }
@@ -254,11 +285,11 @@ Scope {
     onPressed: {
       launcherRoot.toggleLauncher();
       launcherRoot.selected = 0
-      itemList = []
-      itemList = [
-        ...Applications.search(""),
-        ... PowerMenuItems.search("")
-      ].slice()
+      itemList = [...menuList]
+      // itemList = [
+      //   ...Applications.search(""),
+      //   ... PowerMenuItems.search("")
+      // ].slice()
     }
   }
 }
