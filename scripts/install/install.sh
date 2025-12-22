@@ -16,6 +16,7 @@ ORDER=(
   "nyxtra-gaming"
   "nyxtra-gamedev"
   "nyxtra-filemanager"
+  "nyxtra-webdev"
 )
 
 

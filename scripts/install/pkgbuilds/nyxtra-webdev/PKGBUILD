@@ -1,0 +1,12 @@
+pkgname=nyxtra-dev
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra WebDev Dependencies Meta-Package'
+arch=('any')
+license=('custom:none')
+depends=(
+  composer
+  
+)
+
+
