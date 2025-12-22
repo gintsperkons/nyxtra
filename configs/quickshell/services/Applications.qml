@@ -59,6 +59,36 @@ QtObject {
     function search(query = "") {
         const results = []
 
+        const queryFull = query.trim();
+
+        let typeSearch = "";
+        let q = queryFull;
+
+        // Match symbol + optional word + rest
+        const match = queryFull.match(/^([@#!$])(\S+)?\s*(.*)/);
+
+        if (match) {
+            typeSearch = match[2] || ""; // word after symbol or empty
+            q = match[3] || "";          // remaining query
+        }
+
+        // Only restrict if typeSearch has characters
+        if (typeSearch.length > 0) {
+            const allowed = "applications";
+            if (!allowed.startsWith(typeSearch.toLowerCase())) {
+                return []; // skip because the partial word does not match allowed
+            }
+        }
+
+        // If typeSearch is empty, it will pass and search for all
+        q = q.toLowerCase();
+
+        console.log("typeSearch:", typeSearch); // "" if searching for all
+        console.log("search text:", q);
+
+
+
+
         // Build a map of usage counts
         const appUsages = ApplicationModel.getAllUsages() // returns [{name, usageCount}, ...]
         const usageMap = {}
@@ -66,6 +96,8 @@ QtObject {
             usageMap[appUsages[i].name] = appUsages[i].usageCount
         }
         const seen = new Set()
+
+
         // Search apps
         for (let i = 0; i < DesktopEntries.applications.values.length; i++) {
             const app = DesktopEntries.applications.values[i]
@@ -73,14 +105,15 @@ QtObject {
 
             
 
-
             const name = (app.name || "").toLowerCase();
             const generic = (app.genericName || "").toLowerCase();
             const categories = (app.categories || []).map(c => (c || "").toLowerCase());
-            const q = query.toLowerCase()
+
+            
 
             if (seen.has(name) || app.noDisplay) continue
             seen.add(name)
+
 
 
             if ((name.includes(q) || generic.includes(q) || categories.some(c => c.includes(q)) )) {
