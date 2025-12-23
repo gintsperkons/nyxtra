@@ -15,16 +15,13 @@ Scope {
   property real wheelAccumulator: 0 
   property var itemList: []
   property int selected: 0
-  property var menuCrumbs: []
   property var menuList: [
           {
           name: "Applications",
           type: "menu",
           persist: true,
           execute: () => {
-            itemList = [
-              ...Applications.search("")
-            ].slice()
+            GlobalStates.route.push(Enums.route.applicationsMenu);
           }
         },
         {
@@ -32,9 +29,7 @@ Scope {
           type: "menu",
           persist: true,
           execute: () => {
-            itemList = [
-              ...PowerMenuItems.search("")
-            ].slice()
+            GlobalStates.route.push(Enums.route.powerMenu);
           }
         }
   ]
@@ -43,7 +38,7 @@ Scope {
 
   Loader {
     id: loader   
-    active: GlobalStates.launcherOpen 
+    active: GlobalStates.route.contains(Enums.route.launcher) 
     
     sourceComponent:PanelWindow {
       id: launcher
@@ -92,15 +87,7 @@ Scope {
             
           Keys.onPressed: (event) => {
             if (event.key === Qt.Key_Escape) {
-                if (menuCrumbs.length < 1)
-                {
-                  launcherRoot.close()
-                  return;
-                }
-                menuCrumbs.pop();
-                itemList = [
-                  ...menuList
-                ].slice() 
+                GlobalStates.route.pop();
             } else if (event.key === Qt.Key_Down){
               if (launcherRoot.selected < itemList.length - 1)
               {
@@ -120,8 +107,8 @@ Scope {
                 if (itemList[launcherRoot.selected].type == "application")
                   ApplicationModel.incrementUsageCount(itemList[launcherRoot.selected].name)
                 if (itemList[launcherRoot.selected].type == "menu") menuCrumbs.push(itemList[launcherRoot.selected].name);
-                if (!itemList[launcherRoot.selected].persist) launcherRoot.close();
                 itemList[launcherRoot.selected].execute()
+                GlobalStates.route.clear()
               }
             }
           }
@@ -243,8 +230,8 @@ Scope {
                 ApplicationModel.incrementUsageCount(launcherRoot.itemList[idx].name)
               launcherRoot.itemList[idx].execute()
 
-              // Close launcher
-              launcherRoot.close()
+              // // Close launcher
+              // launcherRoot.close()
             }
           }
         }
@@ -257,7 +244,7 @@ Scope {
         windows: [ launcher ]
         active: loader.active
         onCleared: () => {
-          if (!active) launcherRoot.close;
+          // if (!active) launcherRoot.close;
           search.text = ""
         }
       }
@@ -265,31 +252,49 @@ Scope {
   }
 
   Component.onCompleted: {
-    itemList = []
-    itemList = [
-      ...Applications.search(""),
-      ... PowerMenuItems.search("")
-    ].slice()
+          itemList = [
+            ...Applications.search(),
+            ...PowerMenuItems.search()
+          ].slice(); 
   }
+  Connections {
+    target: GlobalStates.route
 
-  function toggleLauncher() {
-    GlobalStates.launcherOpen = !GlobalStates.launcherOpen;
-  }
-  function close() {
-    GlobalStates.launcherOpen = false;
-  }
-  
-  GlobalShortcut {
-    name: "launcherToggle"
-    description: "Toggle launcher"
-    onPressed: {
-      launcherRoot.toggleLauncher();
-      launcherRoot.selected = 0
-      itemList = [...menuList]
-      // itemList = [
-      //   ...Applications.search(""),
-      //   ... PowerMenuItems.search("")
-      // ].slice()
+    function onCurrentChanged() {
+      console.log("route changed",GlobalStates.route.stack)
+      console.log("route changed",GlobalStates.route.length())
+      if(!GlobalStates.route.isAtIdx(Enums.route.launcher,0)) return;
+      if(GlobalStates.route.length() <=1){
+        itemList = [
+          ...menuList
+        ].slice(); 
+        return;
+      }
+      if(GlobalStates.route.length() <=2) {
+        console.log("second menu")
+        if (GlobalStates.route.isAtIdx(Enums.route.applicationsMenu,1)){
+          itemList = [
+            ...Applications.search()
+          ].slice(); 
+          return;
+        }
+        if (GlobalStates.route.isAtIdx(Enums.route.powerMenu,1)){
+          itemList = [
+            ...PowerMenuItems.search()
+          ].slice(); 
+          return;
+        }
+        console.log("second menu none")
+
+      }
+
+
+      console.log("route changed",GlobalStates.route.stack)
     }
   }
+
+
+
+  
+
 }
