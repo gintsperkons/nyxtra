@@ -106,9 +106,8 @@ Scope {
               if (itemList.length > launcherRoot.selected){
                 if (itemList[launcherRoot.selected].type == "application")
                   ApplicationModel.incrementUsageCount(itemList[launcherRoot.selected].name)
-                if (itemList[launcherRoot.selected].type == "menu") menuCrumbs.push(itemList[launcherRoot.selected].name);
                 itemList[launcherRoot.selected].execute()
-                GlobalStates.route.clear()
+                if (itemList[launcherRoot.selected].type == "menu") GlobalStates.route.clear()
               }
             }
           }
