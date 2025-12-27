@@ -10,6 +10,13 @@ QtObject {
   id: config
 
   // Top-level config values
+  property QtObject colors: QtObject {
+    property string backgroundColor: "#112233"
+    property string borderColor: "#111111"
+    property string cursorColor: "#223344"
+    property string textColor: "#ffffff"
+    property string textColorSecondary: "#777777"
+  }
   property QtObject launcher: QtObject {
     property bool enabled: true
     property string backgroundColor: "#112233"
@@ -23,6 +30,10 @@ QtObject {
     property string clockFormatShort: "HH:mm"
   }
 
+  property QtObject settings: QtObject {
+    property bool enabled: true
+  }
+
   // FileView watches and syncs config.json
   property var file: FileView {
     path: Qt.resolvedUrl("../config.json")
@@ -30,6 +41,15 @@ QtObject {
 
     adapter: JsonAdapter {
       id: adapter
+
+      property JsonObject colors: JsonObject {
+        property string backgroundColor
+        property string borderColor
+        property string cursorColor
+        property string textColor
+        property string textColorSecondary
+      }
+
       property JsonObject launcher: JsonObject {
         property bool enabled: launcher.enabled
         property string backgroundColor
@@ -39,8 +59,11 @@ QtObject {
         property string textColorSecondary
       }
       property JsonObject bar: JsonObject {
-        property bool enabled: launcher.enabled
+        property bool enabled: bar.enabled
         property string clockFormatShort
+      }
+       property JsonObject settings: JsonObject {
+        property bool enabled: settings.enabled
       }
     }
 
@@ -91,6 +114,8 @@ QtObject {
   function updateFromAdapter() {
       mergeConfig(config.launcher, file.adapter.launcher)
       mergeConfig(config.bar, file.adapter.bar)
+      mergeConfig(config.settings, file.adapter.settings)
+      mergeConfig(config.colors, file.adapter.colors)
   }
 
 

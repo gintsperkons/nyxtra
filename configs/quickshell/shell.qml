@@ -1,5 +1,6 @@
 import qs.modules.launcher
 import qs.modules.bar
+import qs.modules.settings
 import qs.services
 import qs
 
@@ -22,6 +23,7 @@ ShellRoot {
 
   LazyLoader { active: Config.launcher.enabled; component: Launcher{} }
   LazyLoader { active: Config.bar.enabled && GlobalStates.barShow; component: Bar{} }
+  LazyLoader { active: Config.settings.enabled; component: Settings{} }
 
 
 
@@ -39,7 +41,7 @@ ShellRoot {
     onPressed: {
       if (GlobalStates.route.contains(Enums.route.launcher))
       {
-        GlobalStates.route.clear()
+        // GlobalStates.route.reset()
       } else {
         GlobalStates.route.push(Enums.route.launcher);
       }

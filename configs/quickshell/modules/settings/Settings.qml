@@ -19,7 +19,7 @@ Scope {
     active: GlobalStates.route.contains(Enums.route.settings)
     sourceComponent:PanelWindow {
       id: settings
-      color: "transparent"
+      color: Config.colors.backgroundColor
       WlrLayershell.layer: WlrLayer.Overlay
       implicitWidth: 800
       implicitHeight:600

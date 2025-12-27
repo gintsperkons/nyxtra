@@ -31,6 +31,14 @@ Scope {
           execute: () => {
             GlobalStates.route.push(Enums.route.powerMenu);
           }
+        },
+        {
+          name: "Settings",
+          type: "menu",
+          persist: true,
+          execute: () => {
+            GlobalStates.route.push(Enums.route.settings);
+          }
         }
   ]
 
@@ -107,7 +115,7 @@ Scope {
                 if (itemList[launcherRoot.selected].type == "application")
                   ApplicationModel.incrementUsageCount(itemList[launcherRoot.selected].name)
                 itemList[launcherRoot.selected].execute()
-                if (itemList[launcherRoot.selected].type == "menu") GlobalStates.route.clear()
+                if (itemList[launcherRoot.selected].type !== "menu") GlobalStates.route.reset()
               }
             }
           }
@@ -284,11 +292,12 @@ Scope {
           return;
         }
         console.log("second menu none")
+        return;
 
       }
 
 
-      console.log("route changed",GlobalStates.route.stack)
+      console.log("route changed end",GlobalStates.route.stack)
     }
   }
 
