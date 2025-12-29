@@ -7,4 +7,5 @@ license=('custom:none')
 depends=(
     godot
     scons
+    llvm
 )
