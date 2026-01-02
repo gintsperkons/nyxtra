@@ -11,6 +11,9 @@ pipewire-pulse
 pipewire-jack
 wireplumber
 pavucontrol
+bluez 
+bluez-utils 
+blueman
 )
 
 install="${pkgname}.install"
