@@ -115,7 +115,7 @@ Scope {
                 if (itemList[launcherRoot.selected].type == "application")
                   ApplicationModel.incrementUsageCount(itemList[launcherRoot.selected].name)
                 itemList[launcherRoot.selected].execute()
-                if (itemList[launcherRoot.selected].type !== "menu") GlobalStates.route.reset()
+                if (itemList[launcherRoot.selected].persist) GlobalStates.route.reset()
               }
             }
           }

@@ -41,7 +41,7 @@ ShellRoot {
     onPressed: {
       if (GlobalStates.route.contains(Enums.route.launcher))
       {
-        // GlobalStates.route.reset()
+        GlobalStates.route.reset()
       } else {
         GlobalStates.route.push(Enums.route.launcher);
       }
