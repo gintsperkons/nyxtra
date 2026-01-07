@@ -114,8 +114,8 @@ Scope {
               if (itemList.length > launcherRoot.selected){
                 if (itemList[launcherRoot.selected].type == "application")
                   ApplicationModel.incrementUsageCount(itemList[launcherRoot.selected].name)
+                if (!itemList[launcherRoot.selected].persist) GlobalStates.route.reset()
                 itemList[launcherRoot.selected].execute()
-                if (itemList[launcherRoot.selected].persist) GlobalStates.route.reset()
               }
             }
           }
