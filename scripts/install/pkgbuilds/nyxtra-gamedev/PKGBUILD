@@ -8,4 +8,11 @@ depends=(
     godot
     scons
     llvm
+    libx11        # X11 core
+    libxrandr     # X11 RandR extension
+    libxcursor    # X11 cursor support
+    libxi         # X11 input extension
+    mesa          # OpenGL drivers
+    wayland       # Wayland support (optional, for Wayland backend)
+
 )

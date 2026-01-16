@@ -128,8 +128,14 @@ if [[ $1 == "aur" ]]; then
     exit 0
 fi
 
+if [[ $1 == "vulkan" ]]; then
+    bash "$NYXTRA_HOME/scripts/others/vulkanSDK.sh"
+    exit 0
+fi
+
 phase_paru
 phase_build_local_packages
 phase_install_local_packages
 phase_install_aur_packages
 phase_install_webapps
+bash "$NYXTRA_HOME/scripts/install/other/vulkanSDK.sh"
