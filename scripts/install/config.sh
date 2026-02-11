@@ -12,6 +12,8 @@ declare -a CONFIG_FOLDERS=(
     "zsh"
     "BraveSoftware"
     "quickshell"
+    "fish"
+    "niri"
 )
 
 

@@ -3,6 +3,7 @@ import qs.modules.bar
 import qs.modules.settings
 import qs.services
 import qs
+import Quickshell.Io
 
 
 
@@ -15,6 +16,7 @@ import Quickshell.Hyprland
 
 
 ShellRoot {
+    id : root
   Component.onCompleted: {
     Cache.init()
     Launcher.init()
@@ -27,24 +29,21 @@ ShellRoot {
 
 
 
-  GlobalShortcut {
-    name: "barVisibleToggle"
-    description: "Toggle bar shown"
-    onPressed: {
-      GlobalStates.barShow = !GlobalStates.barShow;
-    }
-  }
+ 
 
-  GlobalShortcut {
-    name: "launcherToggle"
-    description: "Toggle launcher"
-    onPressed: {
-      if (GlobalStates.route.contains(Enums.route.launcher))
-      {
-        GlobalStates.route.reset()
-      } else {
-        GlobalStates.route.push(Enums.route.launcher);
-      }
+
+    IpcHandler {
+        target: "root"
+        function toggleLauncher(): void {
+            if (GlobalStates.route.contains(Enums.route.launcher))
+            {
+                GlobalStates.route.reset()
+            } else {
+                GlobalStates.route.push(Enums.route.launcher);
+            }
+        }
+        function toggleBarVisible(): void {
+            GlobalStates.barShow = !GlobalStates.barShow;
+        }
     }
-  }
 }

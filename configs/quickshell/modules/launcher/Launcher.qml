@@ -7,7 +7,6 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
     
 
 Scope {
@@ -52,13 +51,40 @@ Scope {
       id: launcher
       color: "transparent"
       WlrLayershell.layer: WlrLayer.Overlay
+      WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
+      WlrLayershell.focusable: true
       implicitWidth: 800
       implicitHeight:600
 
-      readonly property HyprlandMonitor monitor: Hyprland.monitorFor(launcher.screen)
-      property bool monitorIsFocused: (Hyprland.focusedMonitor?.id == monitor?.id)
 
       WlrLayershell.namespace: "quickshell:launcher"
+
+Component.onCompleted: {
+      // request focus when the PanelWindow is loaded
+      requestFocusOnToggle();
+    }
+
+    function requestFocusOnToggle() {
+      if (!loader.active || !launcher.visible) return;
+      // PanelWindow needs focus first
+      launcher.forceActiveFocus();
+      // Then TextField, deferred to ensure focus transfer completes
+      Qt.callLater(() => {
+        if (loader.active && launcher.visible) search.forceActiveFocus();
+      });
+    }
+
+    onVisibleChanged: {
+      if (launcher.visible) requestFocusOnToggle();
+    }
+
+    Connections {
+      target: loader
+      onActiveChanged: {
+        // request focus whenever we toggle the launcher
+        if (loader.active) requestFocusOnToggle();
+      }
+    }
 
       Rectangle {
         id: bg
@@ -246,15 +272,7 @@ Scope {
 
   
   
-      HyprlandFocusGrab { // Click outside to close
-        id: grab
-        windows: [ launcher ]
-        active: loader.active
-        onCleared: () => {
-          // if (!active) launcherRoot.close;
-          search.text = ""
-        }
-      }
+   
     }
   }
 
