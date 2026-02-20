@@ -1,2 +1,0 @@
-#!/bin/bash
-canberra-gtk-play -f "/usr/share/sounds/ocean/dialog-information.oga"

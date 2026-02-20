@@ -1,34 +1,58 @@
-#! /usr/bin/env bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-#Actual setup script
-# Copy shared to ~/.local/share/nyxtra
-source $HOME/.local/share/nyxtra/scripts/data/enviroment.sh
+source lib/env.sh
 
-if [[ $1 == config ]]; then
-  bash $NYXTRA_HOME/scripts/install/config.sh
-  exit 0
+echo "User: $USER_NAME"
+echo "Host: $HOST_NAME"
+echo "Root: $NYXTRA_ROOT_DIR"
+
+
+
+hostFile="$NYXTRA_ROOT_DIR/profiles/hosts/$HOST_NAME/setup.sh"
+if [ ! -f "$hostFile" ]; then 
+    hostFile="$NYXTRA_ROOT_DIR/profiles/hosts/default/setup.sh" 
 fi
 
-case "$1" in
-    webapps|paru|build|local|aur|vulkan)
-        echo "Running phase: $1"
-        bash "$NYXTRA_HOME/scripts/install/install.sh" "$1"
-        exit 0
-        ;;
-esac
-
-
-
-sudo cp -f $NYXTRA_HOME/defaults/pacman.conf /etc/pacman.conf
-sudo pacman -Sy --noconfirm
-
-bash $NYXTRA_HOME/scripts/install/install.sh
-bash $NYXTRA_HOME/scripts/install/startup.sh
-bash $NYXTRA_HOME/scripts/install/config.sh
-
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    echo "🔧 Installing Oh My Zsh..."
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+userFile="$NYXTRA_ROOT_DIR/profiles/users/$USER_NAME/setup.sh"
+if [ ! -f "$userFile" ]; then 
+    userFile="$NYXTRA_ROOT_DIR/profiles/users/default/setup.sh" 
 fi
-cp $NYXTRA_HOME/defaults/.zshrc $HOME/.zshrc
+
+if [ "${1:-}" = "pre" ]; then
+    echo "Run Machine Pre Setup"
+    bash "$hostFile" pre
+    echo "Run User Pre Setup"
+    bash "$userFile" pre
+    exit 0
+elif [ "${1:-}" = "install" ]; then
+    echo "Run Machine Setup"
+    bash "$hostFile" install
+    echo "Run User Setup"
+    bash "$userFile" install
+    exit 0
+elif [ "${1:-}" = "post" ]; then
+    echo "Run Machine Post Setup"
+    bash "$hostFile" post
+    echo "Run User Post Setup"
+    bash "$userFile" post
+    exit 0
+fi
+
+
+
+echo "Run Machine Pre Setup"
+bash "$hostFile" pre
+echo "Run Machine Setup"
+bash "$hostFile" install
+echo "Run Machine Post Setup"
+bash "$hostFile" post
+
+
+
+echo "Run User Pre Setup"
+bash "$userFile" pre
+echo "Run User Setup"
+bash "$userFile" install
+echo "Run User Post Setup"
+bash "$userFile" post
