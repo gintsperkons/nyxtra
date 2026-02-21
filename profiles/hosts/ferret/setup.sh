@@ -55,6 +55,9 @@ case "$1" in
             "zen-browser-bin"
             "visual-studio-code-bin"
             "sourcegit-bin"
+            "elephant-all-bin"
+            "walker-bin"
+            "eww"
         )
 
         # Web apps to install

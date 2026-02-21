@@ -8,6 +8,10 @@ depends=(
   alacritty
   zsh
   ttf-jetbrains-mono-nerd
+  noto-fonts-emoji
+  noto-fonts
+  noto-fonts-extra
+  noto-fonts-cjk
   tmux
 )
 
