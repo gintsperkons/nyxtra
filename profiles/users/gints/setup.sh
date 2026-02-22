@@ -30,8 +30,5 @@ case "$1" in
         source "$NYXTRA_ROOT_DIR/lib/functions/copy_configs.sh"
         copy_config_folders "$NYXTRA_CONFIG/gints" "$HOME/.config" "${CONFIG_FOLDERS[@]}"
 
-
-        hyprctl reload || true
-
         ;;
 esac

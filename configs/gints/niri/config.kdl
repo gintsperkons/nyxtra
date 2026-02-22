@@ -269,7 +269,10 @@ layout {
 
 // This line starts waybar, a commonly used bar for Wayland compositors.
 //spawn-at-startup "waybar"
-spawn-at-startup "quickshell"
+spawn-at-startup "walker" "--gapplication-service"
+spawn-at-startup "elephant"
+spawn-at-startup "waybar"
+spawn-at-startup "swaync"
 spawn-at-startup "/usr/lib/polkit-kde-authentication-agent-1"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
@@ -624,14 +627,7 @@ binds {
     Mod+Shift+P { power-off-monitors; }
 
 
-
-
-    Mod+W hotkey-overlay-title="QuickShell Bar Toggle" {
-      spawn "qs" "ipc" "call" "root" "toggleBarVisible";
-    }
-    Mod+Space hotkey-overlay-title="Task Manager" {
-        spawn "qs" "ipc" "call" "root" "toggleLauncher";
-    }
-
+    Mod+Space { spawn "walker"; }
+    Mod+Return { spawn "alacritty"; }
 
 }

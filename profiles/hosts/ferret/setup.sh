@@ -28,7 +28,7 @@ case "$1" in
         ORDER=(
             "nyxtra-basic"
             "nyxtra-login"
-            "nyxtra-hyprland"
+            "nyxtra-niri"
             "nyxtra-terminal"
             "nyxtra-network"
             "nyxtra-nvim"

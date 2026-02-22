@@ -1,0 +1,22 @@
+  pkgname=nyxtra-niri
+  pkgver=1.0
+  pkgrel=1
+  pkgdesc='Nyxtra Niri Dependencies Meta-Package'
+  arch=('any')
+  license=('custom:none')
+  depends=(
+    niri
+    polkit-kde-agent
+    xdg-desktop-portal
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-gnome
+    xwayland-satellite
+    wl-clipboard
+    swaync
+    waybar
+    uwsm
+    gnome-keyring
+  )
+
+
+
