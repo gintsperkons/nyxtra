@@ -105,6 +105,21 @@ input {
     // automatically.
     position x=1280 y=0
 }
+output "eDP-1" {//other
+    position x=0 y=0
+}
+output "DP-3" {// main
+    position x=1920 y=1080
+}
+output "DP-5" {//left
+    position x=0 y=1080
+}
+output "DP-4" {//right
+    position x=3840 y=1080
+}
+output "HDMI-A-5" {//top
+    position x=1920 y=0
+}
 
 // Settings that influence how windows are positioned and sized.
 // Find more information on the wiki:
@@ -627,7 +642,7 @@ binds {
     Mod+Shift+P { power-off-monitors; }
 
 
-    Mod+Space { spawn "walker"; }
+    Mod+Space allow-inhibiting=false allow-when-locked=true { spawn "walker"; }
     Mod+Return { spawn "alacritty"; }
 
 }

@@ -5,7 +5,7 @@ pkgdesc='Nyxtra NVIDIA graphics dependencies meta-package'
 arch=('any')
 license=('custom:none')
 depends=(
-    "nvidia"             # main driver
+    "nvidia-open"             # main driver
     "nvidia-utils"       # necessary utils/libraries
     "nvidia-settings"    # optional configuration tool
     "lib32-nvidia-utils" # 32-bit libraries for gaming
