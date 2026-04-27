@@ -130,3 +130,91 @@ copy_files() {
 }
 
 export -f copy_file copy_files 2>/dev/null || true
+
+# pick_layered_configs CONFIG_ROOT DEST_ROOT DEVICE USER FOLDER FILE...
+# For each FILE, copy the file from CONFIG_ROOT/<DEVICE>/<USER>/<FOLDER>/FILE
+# if it exists; otherwise copy CONFIG_ROOT/default/<FOLDER>/FILE. The result
+# is written into DEST_ROOT/<FOLDER>/FILE, creating directories as needed.
+pick_layered_configs() {
+    if [ "$#" -lt 6 ]; then
+        echo "Usage: pick_layered_configs CONFIG_ROOT DEST_ROOT DEVICE USER FOLDER FILE..." >&2
+        return 2
+    fi
+
+    local cfg_root="$1"; shift
+    local dest_root="$1"; shift
+    local device="$1"; shift
+    local user="$1"; shift
+    local folder="$1"; shift
+
+    local out_dir="$dest_root/$folder"
+    mkdir -p "$out_dir"
+
+    local file
+    for file in "$@"; do
+        local src_dev_user="$cfg_root/$device/$user/$folder/$file"
+        local src_default="$cfg_root/default/$folder/$file"
+        local dest="$out_dir/$file"
+
+        if [ -f "$src_dev_user" ]; then
+            echo "Using device/user file: $src_dev_user -> $dest" >&2
+            copy_file "$src_dev_user" "$dest" || true
+        elif [ -f "$src_default" ]; then
+            echo "Using default file: $src_default -> $dest" >&2
+            copy_file "$src_default" "$dest" || true
+        else
+            echo "No file found for $file (checked $src_dev_user and $src_default), skipping" >&2
+        fi
+    done
+}
+
+export -f pick_layered_configs 2>/dev/null || true
+
+# copy_config_folder_layered CONFIG_ROOT DEST_ROOT DEVICE USER FOLDER
+# Recursively enumerates all files under the default and device/user and
+# user folder sources, then picks per-file (device/user -> default) into DEST.
+copy_config_folder_layered() {
+    if [ "$#" -ne 5 ]; then
+        echo "Usage: copy_config_folder_layered CONFIG_ROOT DEST_ROOT DEVICE USER FOLDER" >&2
+        return 2
+    fi
+
+    local cfg_root="$1"
+    local dest_root="$2"
+    local device="$3"
+    local user="$4"
+    local folder="$5"
+
+    #echo "Processing config folder '$folder' with layering ($device/$user) in $cfg_root to $dest_root ."
+
+    local src_default="$cfg_root/default/$folder"
+    local src_dev_user="$cfg_root/$device/$user/$folder"
+    local src_user="$cfg_root/$user/$folder"
+
+    # collect unique relative file paths from the three locations
+    local tmp
+    tmp=$(mktemp)
+    trap "rm -f '$tmp'" RETURN
+
+    if [ -d "$src_default" ]; then
+        (cd "$src_default" && find . -type f | sed 's|^./||') >> "$tmp" || true
+    fi
+    if [ -d "$src_dev_user" ]; then
+        (cd "$src_dev_user" && find . -type f | sed 's|^./||') >> "$tmp" || true
+    fi
+    if [ -d "$src_user" ]; then
+        (cd "$src_user" && find . -type f | sed 's|^./||') >> "$tmp" || true
+    fi
+
+    # dedupe and build array
+    local files
+    mapfile -t files < <(sort -u "$tmp")
+
+    if [ ${#files[@]} -eq 0 ]; then
+        echo "No files found for folder '$folder' in default/device/user locations, skipping." >&2
+        return 0
+    fi
+
+    # Use pick_layered_configs to copy each file choosing device/user over default
+    pick_layered_configs "$cfg_root" "$dest_root" "$device" "$user" "$folder" "${files[@]}"
+}

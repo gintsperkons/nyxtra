@@ -1,0 +1,46 @@
+#!/bin/bash
+
+name="$1"
+
+if [ -z "$name" ]; then
+    echo "Usage: nyxtra-webapp-remove <app-name>"
+    exit 1
+fi
+
+fname=$(echo "$name" | tr '[:upper:]' '[:lower:]')
+
+desktop_file="$HOME/.local/share/applications/$fname.desktop"
+icon_file="$HOME/.local/share/icons/$fname.png"
+
+echo "Checking webapp: $name"
+
+# Check if desktop file exists
+if [ ! -f "$desktop_file" ]; then
+    echo "Not found: $desktop_file"
+    exit 1
+fi
+
+# Check if it's a nyxtra webapp
+if ! grep -q "^X-Nyxtra-Webapp=true" "$desktop_file"; then
+    echo "Not a nyxtra webapp — aborting"
+    exit 1
+fi
+
+echo "Confirmed nyxtra webapp — removing..."
+
+# Remove desktop file
+rm "$desktop_file"
+echo "Removed: $desktop_file"
+
+# Remove icon (only if it exists)
+if [ -f "$icon_file" ]; then
+    rm "$icon_file"
+    echo "Removed icon: $icon_file"
+else
+    echo "Icon not found"
+fi
+
+# Refresh desktop database
+update-desktop-database ~/.local/share/applications 2>/dev/null
+
+echo "Done."

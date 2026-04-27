@@ -71,4 +71,18 @@ phase_install_webapps() {
     fi
 }
 
-export -f phase_paru phase_build_local_packages phase_install_local_packages phase_install_aur_packages phase_install_webapps 2>/dev/null || true
+phase_install_flatpaks() {
+    # Usage: phase_install_flatpaks FLATPAKS_ARRAY_NAME
+    local flatpaks_name="${1:-FLATPAKS}"
+    declare -n flatpaks_ref="$flatpaks_name"
+    if [[ ${#flatpaks_ref[@]} -gt 0 ]]; then
+        echo "🚀 Installing Flatpak packages..."
+        for pkg in "${flatpaks_ref[@]}"; do
+            flatpak install flathub "$pkg" -y || echo "⚠️ Failed to install $pkg, continuing..."
+        done
+    else
+        echo "No Flatpak packages configured"
+    fi
+}
+
+export -f phase_paru phase_build_local_packages phase_install_local_packages phase_install_aur_packages phase_install_webapps phase_install_flatpaks 2>/dev/null || true

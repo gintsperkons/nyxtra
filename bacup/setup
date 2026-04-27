@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/env.sh"
+
+
+echo "User: $USER_NAME"
+echo "Host: $HOST_NAME"
+echo "Root: $NYXTRA_ROOT_DIR"
+
+
+
+hostFile="$NYXTRA_ROOT_DIR/profiles/hosts/$HOST_NAME/setup.sh"
+if [ ! -f "$hostFile" ]; then 
+    hostFile="$NYXTRA_ROOT_DIR/profiles/hosts/default/setup.sh" 
+fi
+
+userFile="$NYXTRA_ROOT_DIR/profiles/users/$USER_NAME/setup.sh"
+if [ ! -f "$userFile" ]; then 
+    userFile="$NYXTRA_ROOT_DIR/profiles/users/default/setup.sh" 
+fi
+
+if [ "${1:-}" = "pre" ]; then
+    echo "Run Machine Pre Setup"
+    bash "$hostFile" pre
+    echo "Run User Pre Setup"
+    bash "$userFile" pre
+    exit 0
+elif [ "${1:-}" = "install" ]; then
+    echo "Run Machine Setup"
+    bash "$hostFile" install
+    echo "Run User Setup"
+    bash "$userFile" install
+    exit 0
+elif [ "${1:-}" = "post" ]; then
+    echo "Run Machine Post Setup"
+    bash "$hostFile" post
+    echo "Run User Post Setup"
+    bash "$userFile" post
+    exit 0
+fi
+
+
+
+echo "Run Machine Pre Setup"
+bash "$hostFile" pre
+echo "Run Machine Setup"
+bash "$hostFile" install
+echo "Run Machine Post Setup"
+bash "$hostFile" post
+
+
+
+echo "Run User Pre Setup"
+bash "$userFile" pre
+echo "Run User Setup"
+bash "$userFile" install
+echo "Run User Post Setup"
+bash "$userFile" post

@@ -1,3 +1,6 @@
 **.pkg.tar.zst
 **/pkg/**
 old/
+logs/**
+state/**
+*.log

@@ -5,7 +5,7 @@ pkgdesc='Nyxtra File Manager Dependencies Meta-Package'
 arch=('any')
 license=('custom:none')
 depends=(
-  dolphin
+  nautilus
 )
 
 

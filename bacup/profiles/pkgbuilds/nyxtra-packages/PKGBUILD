@@ -1,0 +1,9 @@
+pkgname=nyxtra-packages
+pkgver=1.0
+pkgrel=1
+pkgdesc='Nyxtra Packages dependencies meta-package'
+arch=('any')
+license=('custom:none')
+depends=(
+    flatpak
+)

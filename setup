@@ -1,58 +1,39 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source lib/env.sh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib/env.sh"
+
 
 echo "User: $USER_NAME"
 echo "Host: $HOST_NAME"
 echo "Root: $NYXTRA_ROOT_DIR"
 
+FIRST_VAR="${1:-}"
+SECOND_VAR="${2:-}"
+THIRD_VAR="${3:-}"
 
+declare -A PHASE_DEFAULTS=(
+    [pre]="system user pacman"
+    [run]="system user"
+    [post]="user"
+)
 
-hostFile="$NYXTRA_ROOT_DIR/profiles/hosts/$HOST_NAME/setup.sh"
-if [ ! -f "$hostFile" ]; then 
-    hostFile="$NYXTRA_ROOT_DIR/profiles/hosts/default/setup.sh" 
-fi
+#generate action file
 
-userFile="$NYXTRA_ROOT_DIR/profiles/users/$USER_NAME/setup.sh"
-if [ ! -f "$userFile" ]; then 
-    userFile="$NYXTRA_ROOT_DIR/profiles/users/default/setup.sh" 
-fi
+#call actions from file in order
+#if called with argument, only run that action/subaction
 
-if [ "${1:-}" = "pre" ]; then
-    echo "Run Machine Pre Setup"
-    bash "$hostFile" pre
-    echo "Run User Pre Setup"
-    bash "$userFile" pre
-    exit 0
-elif [ "${1:-}" = "install" ]; then
-    echo "Run Machine Setup"
-    bash "$hostFile" install
-    echo "Run User Setup"
-    bash "$userFile" install
-    exit 0
-elif [ "${1:-}" = "post" ]; then
-    echo "Run Machine Post Setup"
-    bash "$hostFile" post
-    echo "Run User Post Setup"
-    bash "$userFile" post
-    exit 0
+ACTIONS_FILE="$NYXTRA_ROOT_DIR/profiles/$HOST_NAME/$USER_NAME/actions.sh"
+
+if [[ -f "$ACTIONS_FILE" ]]; then
+    source "$ACTIONS_FILE"
+else
+    echo "Error: actions file not found: $ACTIONS_FILE" >&2
+    exit 1
 fi
 
 
+source "$SCRIPT_DIR/lib/functions/run_layered.sh"
 
-echo "Run Machine Pre Setup"
-bash "$hostFile" pre
-echo "Run Machine Setup"
-bash "$hostFile" install
-echo "Run Machine Post Setup"
-bash "$hostFile" post
-
-
-
-echo "Run User Pre Setup"
-bash "$userFile" pre
-echo "Run User Setup"
-bash "$userFile" install
-echo "Run User Post Setup"
-bash "$userFile" post
+run_layered "$FIRST_VAR" "$SECOND_VAR" "$THIRD_VAR"

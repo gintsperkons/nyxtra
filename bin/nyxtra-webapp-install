@@ -2,8 +2,14 @@
 # $1 = app name
 # $2 = app URL
 
+
 name="$1"
 url="$2"
+
+if [ -z "$name" ] || [ -z "$url" ]; then
+    echo "Usage: nyxtra-webapp-install <app-name> <app-url>"
+    exit 1
+fi
 
 mkdir -p "$HOME/.local/share/applications/"
 mkdir -p "$HOME/.local/share/icons/"
@@ -26,6 +32,7 @@ Terminal=false
 Type=Application
 Categories=Network;Utility;
 StartupWMClass=$name
+X-Nyxtra-Webapp=true
 EOL
 
 # Download icon if it doesn't exist
